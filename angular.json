@@ -21,10 +21,11 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+                "src/favicon.ico",
+                "src/assets",
+                "src/assets/images/",
+                "src/assets/images/icons/",
+                "src/assets/images/NFT/"
             ],
             "styles": [
               "src/styles.css"
@@ -79,10 +80,11 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+                "src/favicon.ico",
+                "src/assets",
+                "src/assets/images/",
+                "src/assets/images/icons/",
+                "src/assets/images/NFT/"
             ],
             "styles": [
               "src/styles.css"
