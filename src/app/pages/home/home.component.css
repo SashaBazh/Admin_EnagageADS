@@ -298,7 +298,7 @@ main {
   background-position: center;
   padding: 20px;
   margin-top: -40px;
-  min-height: 680px; /* Используйте min-height вместо height для адаптивности */
+  min-height: 475px; /* Используйте min-height вместо height для адаптивности */
 }
 
 .services_text {
@@ -322,41 +322,52 @@ main {
 }
 
 /* Медиа-запросы для адаптивности */
-
-@media screen and (max-width: 768px) {
-  .services_text {
-    font-size: 20px;
-    margin: 13vw auto;
-  }
-
-  .services_icons {
-    width: 250px;
-    height: 250px;
-  }
-}
-
 @media screen and (max-width: 480px) {
-  .services_text {
-    font-size: 18px;
-    margin: 13vw auto;
-  }
-
-  .services_icons {
-    width: 200px;
-    height: 200px;
-  }
-}
-
-/* Дополнительный медиа-запрос для очень больших экранов */
-@media screen and (min-width: 1200px) {
   .services_text {
     font-size: 28px;
     max-width: 80%;
   }
 
   .services_icons {
-    width: 350px;
-    height: 350px;
+    width: 400px;
+    height: 400px;
+  }
+}
+
+@media screen and (min-width: 481px) and (max-width: 720px) {
+  .services_text {
+    font-size: 28px;
+    max-width: 80%;
+  }
+
+  .services_icons {
+    width: 500px;
+    height: 500px;
+  }
+}
+
+/* Дополнительный медиа-запрос для очень больших экранов */
+@media screen and (min-width: 721px) and (max-width: 1024px) {
+  .services_text {
+    font-size: 28px;
+    max-width: 80%;
+  }
+
+  .services_icons {
+    width: 600px;
+    height: 600px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .services_text {
+    font-size: 28px;
+    max-width: 80%;
+  }
+
+  .services_icons {
+    width: 700px;
+    height: 700px;
   }
 }
 
