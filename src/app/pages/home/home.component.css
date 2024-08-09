@@ -9,25 +9,32 @@
 
 body {
   font-family: Arial, sans-serif;
-  width: 320px;
+  width: 100%;
   margin: 0 auto;
   background-color: white;
 }
 
 .container {
-  background-size: cover;
+  /* background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center; */
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
   /* padding-left: 20px;
   padding-right: 20px; */
 }
 
+/* ///// HEADER //////////////////////////////////////////////////////////////////////////////*/
 header {
   background-color: FFFFFF;
-  padding: 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 2px;
 }
 
 .logo {
@@ -35,20 +42,102 @@ header {
   flex-grow: 1;
 }
 
-.logo img {
-  max-width: 100px;
+/* .logo img {
+  width: 10vw;
   margin-left: 15%;
+} */
+
+.logo svg {
+  width: 15vw;
+  margin-left: 15%;
+  padding: 3px;
+
 }
 
-.menu-icon {
+.menu_icon {
   margin-right: 10px;
-
 }
 
-.menu-icon img {
-  max-width: 30px;
+/* .menu-icon img {
+  width: 5vw;
+} */
+
+.menu_icon svg {
+  width: 5vw;
 }
 
+.desktop_menu,
+.action_button {
+  display: none;
+}
+
+@media screen and (min-width: 1001px) {
+  header {
+    justify-content: flex-start;
+    padding: 20px;
+  }
+
+  .logo {
+    flex-grow: 0;
+    margin-right: 20px;
+  }
+
+  .logo img {
+    margin-left: 0;
+  }
+
+  .desktop_menu {
+    display: block;
+    flex-grow: 1;
+  }
+
+  .desktop_menu ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .desktop_menu ul li {
+    margin: 0 2vw;
+  }
+
+  .desktop_menu a {
+    color: black;
+    text-decoration: none;
+    font-weight: 800;
+  }
+
+  .desktop_menu a:hover {
+    /* Стиль для ссылки при наведении, если нужно */
+    color: gray;
+  }
+
+  .action_button {
+    display: block;
+    text-align: center;
+  }
+
+  .action_button button {
+    background-color: #C5F542;
+    font-weight: 900;
+    width: 15vw;
+    color: #000;
+    border: none;
+    border-radius: 20px;
+    padding: 15px 20px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .menu_icon {
+    display: none;
+  }
+}
+
+
+
+/* ///// HEADER //////////////////////////////////////////////////////////////////////////////*/
 main {
   margin-top: -20px;
   margin-bottom: 20px;
@@ -58,13 +147,14 @@ main {
 
 .bigtext {
   text-align: center;
-  align-items:center;
+  align-items: center;
   margin-top: 10%;
   margin-bottom: 5%;
   font-size: 30px;
   font-weight: 800;
   font-family: 'Gilroy', sans-serif;
-  line-height: 1; /* Добавляем это, чтобы уменьшить отступ между строками */
+  line-height: 1;
+  /* Добавляем это, чтобы уменьшить отступ между строками */
 }
 
 .hero-text {
@@ -90,9 +180,9 @@ main {
 .discuss_project_button {
   text-align: center;
   margin-top: 20px;
- }
- 
- .discuss_project_button button {
+}
+
+.discuss_project_button button {
   background-color: #C5F542;
   font-weight: bold;
   width: 90%;
@@ -104,14 +194,15 @@ main {
   cursor: pointer;
   /* margin-left: 10px;
   margin-right: 10px; */
- }
+}
 
- .advantages_text {
+.advantages_text {
   margin-top: 70px;
   text-align: center;
   font-weight: 600;
   font-size: 29px;
 }
+
 .features {
   display: flex;
   flex-wrap: wrap;
@@ -165,17 +256,23 @@ main {
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  width: 300px; /* Установите ширину равную диаметру пирога */
-  height: 300px; /* Установите высоту равную диаметру пирога */
+  width: 300px;
+  /* Установите ширину равную диаметру пирога */
+  height: 300px;
+  /* Установите высоту равную диаметру пирога */
   position: relative;
-  border-radius: 50%; /* Делаем пирог круглым */
+  border-radius: 50%;
+  /* Делаем пирог круглым */
 }
 
 .service_icon {
   position: absolute;
-  width: 50%; /* Ширина каждого кусочка пирога */
-  height: 50%; /* Высота каждого кусочка пирога */
-  transition: all 0.3s ease; /* Добавляем плавный переход при наведении */
+  width: 50%;
+  /* Ширина каждого кусочка пирога */
+  height: 50%;
+  /* Высота каждого кусочка пирога */
+  transition: all 0.3s ease;
+  /* Добавляем плавный переход при наведении */
 }
 
 .service_icon img {
@@ -288,9 +385,11 @@ main {
   0% {
     transform: scale(0.7);
   }
+
   50% {
     transform: scale(0.8);
   }
+
   100% {
     transform: scale(0.7);
   }
@@ -304,9 +403,12 @@ main {
 .big_text_left {
   margin-top: 50px;
   padding: 10px;
-  font-size: 36px; /* размер шрифта */
-  font-weight: bold; /* жирное начертание */
-  text-align: left; /* выравнивание по левому краю */
+  font-size: 36px;
+  /* размер шрифта */
+  font-weight: bold;
+  /* жирное начертание */
+  text-align: left;
+  /* выравнивание по левому краю */
   width: 50%;
 }
 
@@ -336,7 +438,8 @@ main {
 }
 
 .image_container_left img {
-  width: 300px; /* Задайте необходимую ширину изображения */
+  width: 300px;
+  /* Задайте необходимую ширину изображения */
   height: auto;
   margin-right: 20px;
 }
@@ -411,7 +514,7 @@ main {
   height: 50%;
   overflow: hidden;
   display: flex;
-  
+
 }
 
 .slide {
@@ -470,8 +573,8 @@ main {
 
 .consult_text {
   font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .subc_text {
@@ -486,15 +589,17 @@ main {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
-  }
-  .input-container label {
+}
+
+.input-container label {
   font-weight: bold;
   margin-bottom: 5px;
   color: #0037FF;
   font-size: 12px;
   margin-left: 8px;
-  }
-  .input-container input {
+}
+
+.input-container input {
   padding: 6px;
   border: 1px solid #0037FF;
   border-radius: 10px;
@@ -502,85 +607,91 @@ main {
   margin-left: 8px;
   margin-right: 8px;
   padding-left: 15px;
-  }
-  .input-container input::placeholder {
+}
+
+.input-container input::placeholder {
   color: #999;
   font-size: 10px;
-  }
-  
-  #phone {
-    padding-left: 30px; /* Добавьте немного отступа слева, чтобы иконка не была прижата к краю */
-    background-image: url('../../../assets/images/country/belarus.png'); /* Путь к вашей иконке */
-    background-size: 25px 15px; /* Задайте размер иконки */
-    background-position: 5px center; /* Разместите иконку в центре по вертикали, с отступом 5px слева */
-    background-repeat: no-repeat;
-  }
+}
+
+#phone {
+  padding-left: 30px;
+  /* Добавьте немного отступа слева, чтобы иконка не была прижата к краю */
+  background-image: url('../../../assets/images/country/belarus.png');
+  /* Путь к вашей иконке */
+  background-size: 25px 15px;
+  /* Задайте размер иконки */
+  background-position: 5px center;
+  /* Разместите иконку в центре по вертикали, с отступом 5px слева */
+  background-repeat: no-repeat;
+}
 
 
-  footer {
-    background-image: url('../../../assets/images/footer_blue.png');
-    color: #fff;
-    padding: 45px 0; /* Отступы вверх/вниз */
-    padding-bottom: 10px;
-    background-repeat: no-repeat;
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .footer-icons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-    width: 100%;
-  }
-  
-  .icon-link {
-    display: block;
-    margin: 0 15px;
-  }
-  
-  .icon-link img {
-    width: 45px;
-    height: 42px;
-  }
-  
-  .footer-info {
-    text-align: center;
-    margin-bottom: 20px;
-    font-family: 'Gilroy', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .footer-copyright {
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  .footer_text_1 {
-    font-size: 12px;
-    font-weight: 800;
-  }
-  
-  .footer_text_2 {
-    font-size: 10px;
-    padding-left: 15px;
-    padding-right: 15px;
-    font-weight: 100;
-    margin-bottom: 10px;
-  }
-  
-  .footer_text_3 {
-    font-size: 10px;
-    padding-left: 15px;
-    padding-right: 15px;
-    font-weight: 100;
-    margin-bottom: 5px;
-    text-decoration: underline;
-    width: 60%;
-    text-align: center;
-  }
+footer {
+  background-image: url('../../../assets/images/footer_blue.png');
+  color: #fff;
+  padding: 45px 0;
+  /* Отступы вверх/вниз */
+  padding-bottom: 10px;
+  background-repeat: no-repeat;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-icons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.icon-link {
+  display: block;
+  margin: 0 15px;
+}
+
+.icon-link img {
+  width: 45px;
+  height: 42px;
+}
+
+.footer-info {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'Gilroy', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-copyright {
+  text-align: center;
+  font-size: 14px;
+}
+
+.footer_text_1 {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.footer_text_2 {
+  font-size: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-weight: 100;
+  margin-bottom: 10px;
+}
+
+.footer_text_3 {
+  font-size: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-weight: 100;
+  margin-bottom: 5px;
+  text-decoration: underline;
+  width: 60%;
+  text-align: center;
+}
