@@ -49,9 +49,8 @@ header {
 
 .logo svg {
   width: 15vw;
-  margin-left: 15%;
+  margin-left: 10%;
   padding: 3px;
-
 }
 
 .menu_icon {
@@ -135,9 +134,7 @@ header {
   }
 }
 
-
-
-/* ///// HEADER //////////////////////////////////////////////////////////////////////////////*/
+/* ///// MAIN //////////////////////////////////////////////////////////////////////////////*/
 main {
   margin-top: -20px;
   margin-bottom: 20px;
@@ -200,69 +197,167 @@ main {
   margin-top: 70px;
   text-align: center;
   font-weight: 600;
-  font-size: 29px;
+  font-size: 4.65vw;
 }
-
 .features {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px -10px; /* Отрицательный margin для компенсации padding у .feature */
 }
 
 .feature {
-  flex-basis: 50%;
+  flex-basis: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 7px;
+  padding: 15px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
-.feature img {
-  max-width: 50px;
+.feature svg {
+  max-width: 60px;
+  height: auto;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
 }
 
 .feature h3 {
-  margin-top: 10px;
-  font-size: 12px;
-  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .feature p {
-  margin-top: 5px;
-  font-size: 10px;
+  margin-top: 0;
+  font-size: 9px;
+  line-height: 1.5;
+  max-width: 100%;
+}
+
+/* Планшеты (портретная ориентация) */
+@media screen and (min-width: 300px) {
+  .feature {
+    flex-basis: calc(50% - 20px);
+  }
+}
+
+/* Планшеты (альбомная ориентация) */
+@media screen and (min-width: 900px) {
+  .feature {
+    flex-basis: calc(33.333% - 20px);
+  }
+}
+
+/* Десктопы */
+@media screen and (min-width: 1200px) {
+  .features {
+    margin: 40px -15px;
+  }
+
+  .feature {
+    flex-basis: calc(25% - 30px);
+    padding: 20px;
+  }
+
+  .feature svg {
+    max-width: 60px;
+  }
+
+  .feature h3 {
+    font-size: 20px;
+  }
+
+  .feature p {
+    font-size: 16px;
+  }
+
+  .feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  .feature:hover img {
+    transform: scale(1.1);
+  }
+}
+
+/* Большие десктопы */
+@media screen and (min-width: 1600px) {
+  .feature {
+    flex-basis: calc(20% - 30px);
+  }
 }
 
 .pie {
-  background-image: url('../../../assets/images/blue_fon.png');
+  background-image: url('../../../assets/images/blue_fon_destop.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   padding: 20px;
   margin-top: -40px;
-  height: 680px;
-  background-repeat: no-repeat;
+  min-height: 680px; /* Используйте min-height вместо height для адаптивности */
 }
 
-
 .services_text {
-  margin-top: 80px;
+  margin: 13vw auto;
   text-align: center;
-  font-weight: 500;
-  font-size: 24px;
-  margin-bottom: 80px;
+  font-size: 36px;
   color: white;
   font-weight: 700;
+  max-width: 90%;
 }
 
 .services_icons {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  align-items: center;
+  margin: 20px auto;
   width: 300px;
-  /* Установите ширину равную диаметру пирога */
   height: 300px;
-  /* Установите высоту равную диаметру пирога */
   position: relative;
   border-radius: 50%;
-  /* Делаем пирог круглым */
+}
+
+/* Медиа-запросы для адаптивности */
+
+@media screen and (max-width: 768px) {
+  .services_text {
+    font-size: 20px;
+    margin: 13vw auto;
+  }
+
+  .services_icons {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .services_text {
+    font-size: 18px;
+    margin: 13vw auto;
+  }
+
+  .services_icons {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+/* Дополнительный медиа-запрос для очень больших экранов */
+@media screen and (min-width: 1200px) {
+  .services_text {
+    font-size: 28px;
+    max-width: 80%;
+  }
+
+  .services_icons {
+    width: 350px;
+    height: 350px;
+  }
 }
 
 .service_icon {
