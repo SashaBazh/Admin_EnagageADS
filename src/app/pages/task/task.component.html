@@ -1,37 +1,6 @@
-<header class="bg-dark text-white py-3">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <a class="navbar-brand" href="#">ADS_ADMIN</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/baner" routerLinkActive="active">Банер</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/task" routerLinkActive="active">Задания</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/prize" routerLinkActive="active">Призы</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/settings" routerLinkActive="active">Настройки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/mailings" routerLinkActive="active">Рассылки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/payouts" routerLinkActive="active">Выплаты</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-</header>
-
-<div class="container mt-5">
+<div class="app-container" [ngClass]="{'dark-theme': isDarkTheme}">
+  <app-header></app-header>
+  <div class="container mt-5">
     <h2>Выставление заданий</h2>
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
@@ -42,53 +11,53 @@
           <option value="regular">Обычное</option>
         </select>
       </div>
-  
+
       <div class="mb-3">
         <label for="title" class="form-label">Название</label>
         <input type="text" class="form-control" id="title" formControlName="title" required>
       </div>
-  
+
       <div class="mb-3">
         <label for="price" class="form-label">Цена</label>
         <input type="number" class="form-control" id="price" formControlName="price" required>
       </div>
-  
+
       <div class="mb-3">
         <label for="actionName" class="form-label">Название действия</label>
         <input type="text" class="form-control" id="actionName" formControlName="actionName" required>
       </div>
-  
+
       <div class="mb-3">
         <label for="limit" class="form-label">Лимит</label>
         <input type="number" class="form-control" id="limit" formControlName="limit" required>
       </div>
-  
+
       <div class="mb-3">
         <label for="category" class="form-label">Категория</label>
         <input type="text" class="form-control" id="category" formControlName="category" required>
       </div>
-  
+
       <div class="mb-3">
         <label for="image" class="form-label">Картинка (не обязательно)</label>
         <input type="file" class="form-control" id="image" (change)="onFileSelected($event)" accept="image/*">
       </div>
-  
+
       <div class="mb-3">
         <label for="link" class="form-label">Ссылка</label>
         <input type="url" class="form-control" id="link" formControlName="link" required>
       </div>
-  
+
       <ng-container *ngIf="taskForm.get('taskType')?.value === 'daily'">
         <div class="mb-3">
           <label for="startTime" class="form-label">Время начала</label>
           <input type="time" class="form-control" id="startTime" formControlName="startTime" required>
         </div>
-  
+
         <div class="mb-3">
           <label for="endTime" class="form-label">Время окончания</label>
           <input type="time" class="form-control" id="endTime" formControlName="endTime" required>
         </div>
-  
+
         <div class="mb-3">
           <label for="taskSize" class="form-label">Размер задания</label>
           <select class="form-select" id="taskSize" formControlName="taskSize" required>
@@ -99,7 +68,8 @@
           </select>
         </div>
       </ng-container>
-  
+
       <button type="submit" class="btn btn-primary" [disabled]="!taskForm.valid">Выставить задание</button>
     </form>
   </div>
+</div>

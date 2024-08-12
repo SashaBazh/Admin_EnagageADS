@@ -1,20 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../header/header.component';
+import { Subscription } from 'rxjs';
+import { ThemeService } from '../../theme.service';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 @Component({
   selector: 'app-mailings',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, EditorModule],
   templateUrl: './mailings.component.html',
   styleUrl: './mailings.component.css'
 })
-export class MailingsComponent implements OnInit {
+export class MailingsComponent implements OnInit, OnDestroy {
   mailingForm: FormGroup;
   selectedFile: File | null = null;
+  isDarkTheme: boolean = false;
+  private themeSubscription: Subscription | null = null;
 
-  constructor(private fb: FormBuilder) {
+  tinyMceConfig = {
+    height: 300,
+    menubar: false,
+    plugins: [
+      'advlist autolink lists link image charmap print preview anchor',
+      'searchreplace visualblocks code fullscreen',
+      'insertdatetime media table paste code help wordcount'
+    ],
+    toolbar:
+      'undo redo | formatselect | bold italic backcolor | \
+      alignleft aligncenter alignright alignjustify | \
+      bullist numlist outdent indent | removeformat | help'
+  };
+
+  constructor(private fb: FormBuilder,
+    private themeService: ThemeService) {
     this.mailingForm = this.fb.group({
       rankSelection: ['specific', Validators.required], // 'range' или 'specific'
       rankFrom: [''],
@@ -26,7 +47,17 @@ export class MailingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Дополнительная логика инициализации, если необходимо
+    this.themeSubscription = this.themeService.getThemeObservable().subscribe(
+      isDark => {
+        this.isDarkTheme = isDark;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
   }
 
   onFileSelected(event: any) {

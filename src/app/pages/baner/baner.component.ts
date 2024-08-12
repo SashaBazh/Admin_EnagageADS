@@ -1,21 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../header/header.component';
+import { ThemeService } from '../../theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-baner',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, HeaderComponent],
   templateUrl: './baner.component.html',
   styleUrl: './baner.component.css'
 })
-export class BanerComponent {
+export class BanerComponent implements OnInit, OnDestroy {
   bannerForm: FormGroup;
   imageSelected: boolean = false;
+  isDarkTheme = false;
+  private themeSubscription: Subscription | undefined;
   
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private themeService: ThemeService) {
     this.bannerForm = this.fb.group({
       link: ['', Validators.required],
       startDate: ['', Validators.required],
@@ -23,6 +28,19 @@ export class BanerComponent {
       type: ['', Validators.required]
     });
   }
+
+  ngOnInit() {
+    this.themeSubscription = this.themeService.getThemeObservable().subscribe(isDark => {
+      this.isDarkTheme = isDark;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+  }
+
 
   onFileSelected(event: any) {
     const file = event.target.files[0];

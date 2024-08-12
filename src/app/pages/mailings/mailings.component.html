@@ -1,78 +1,64 @@
-<header class="bg-dark text-white py-3">
-    <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <a class="navbar-brand" href="#">ADS_ADMIN</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/baner" routerLinkActive="active">Банер</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/task" routerLinkActive="active">Задания</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/prize" routerLinkActive="active">Призы</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/settings" routerLinkActive="active">Настройки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/mailings" routerLinkActive="active">Рассылки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/payouts" routerLinkActive="active">Выплаты</a>
-                    </li>
-                </ul>
+<div class="app-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <app-header></app-header>
+
+    <div class="container mt-5">
+        <h2>Рассылки</h2>
+        <form [formGroup]="mailingForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <label class="form-label">Выбор ранга</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="rankSelection" id="rangeRank" value="range">
+                    <label class="form-check-label" for="rangeRank">Диапазон рангов</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="rankSelection" id="specificRank" value="specific">
+                    <label class="form-check-label" for="specificRank">Конкретные ранги</label>
+                </div>
             </div>
-        </nav>
+
+            <div *ngIf="mailingForm.get('rankSelection')?.value === 'range'" class="mb-3">
+                <label for="rankFrom" class="form-label">Ранг от</label>
+                <input type="number" class="form-control" id="rankFrom" formControlName="rankFrom">
+                <label for="rankTo" class="form-label">Ранг до</label>
+                <input type="number" class="form-control" id="rankTo" formControlName="rankTo">
+            </div>
+
+            <div *ngIf="mailingForm.get('rankSelection')?.value === 'specific'" class="mb-3">
+                <label for="specificRanks" class="form-label">Конкретные ранги (через запятую)</label>
+                <input type="text" class="form-control" id="specificRanks" formControlName="specificRanks" placeholder="Например: 1,5,8">
+            </div>
+
+            <div class="mb-3">
+                <label for="messageText" class="form-label">Текст сообщения</label>
+                <editor
+                    formControlName="messageText"
+                    [init]="{
+                        height: 300,
+                        menubar: false,
+                        plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table paste code help wordcount'
+                        ],
+                        toolbar:
+                            'undo redo | formatselect | bold italic backcolor | \
+                            alignleft aligncenter alignright alignjustify | \
+                            bullist numlist outdent indent | removeformat | help'
+                    }"
+                ></editor>
+            </div>
+
+            <div class="mb-3">
+                <label for="sendTime" class="form-label">Время рассылки</label>
+                <input type="datetime-local" class="form-control" id="sendTime" formControlName="sendTime">
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Картинка</label>
+                <input type="file" class="form-control" id="image" (change)="onFileSelected($event)" accept="image/*">
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="!mailingForm.valid">Подтвердить рассылку</button>
+        </form>
     </div>
-  </header>
-
-  <div class="container mt-5">
-    <h2>Рассылки</h2>
-    <form [formGroup]="mailingForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-            <label class="form-label">Выбор ранга</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" formControlName="rankSelection" id="rangeRank" value="range">
-                <label class="form-check-label" for="rangeRank">Диапазон рангов</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" formControlName="rankSelection" id="specificRank" value="specific">
-                <label class="form-check-label" for="specificRank">Конкретные ранги</label>
-            </div>
-        </div>
-
-        <div *ngIf="mailingForm.get('rankSelection')?.value === 'range'" class="mb-3">
-            <label for="rankFrom" class="form-label">Ранг от</label>
-            <input type="number" class="form-control" id="rankFrom" formControlName="rankFrom">
-            <label for="rankTo" class="form-label">Ранг до</label>
-            <input type="number" class="form-control" id="rankTo" formControlName="rankTo">
-        </div>
-
-        <div *ngIf="mailingForm.get('rankSelection')?.value === 'specific'" class="mb-3">
-            <label for="specificRanks" class="form-label">Конкретные ранги (через запятую)</label>
-            <input type="text" class="form-control" id="specificRanks" formControlName="specificRanks" placeholder="Например: 1,5,8">
-        </div>
-
-        <div class="mb-3">
-            <label for="messageText" class="form-label">Текст сообщения</label>
-            <textarea class="form-control" id="messageText" formControlName="messageText" rows="3"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="sendTime" class="form-label">Время рассылки</label>
-            <input type="datetime-local" class="form-control" id="sendTime" formControlName="sendTime">
-        </div>
-
-        <div class="mb-3">
-            <label for="image" class="form-label">Картинка</label>
-            <input type="file" class="form-control" id="image" (change)="onFileSelected($event)" accept="image/*">
-        </div>
-
-        <button type="submit" class="btn btn-primary" [disabled]="!mailingForm.valid">Подтвердить рассылку</button>
-    </form>
 </div>

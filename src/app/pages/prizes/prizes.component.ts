@@ -1,20 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../header/header.component';
+import { Subscription } from 'rxjs';
+import { ThemeService } from '../../theme.service';
 
 @Component({
   selector: 'app-prizes',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent],
   templateUrl: './prizes.component.html',
   styleUrl: './prizes.component.css'
 })
-export class PrizeComponent implements OnInit {
+export class PrizeComponent implements OnInit, OnDestroy {
   prizeForm: FormGroup;
   selectedFile: File | null = null;
+  isDarkTheme: boolean = false;
+  private themeSubscription: Subscription | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private themeService: ThemeService) {
     this.prizeForm = this.fb.group({
       type: ['', Validators.required],
       description: ['', Validators.required],
@@ -24,7 +29,17 @@ export class PrizeComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Если нужна дополнительная логика при инициализации
+    this.themeSubscription = this.themeService.getThemeObservable().subscribe(
+      isDark => {
+        this.isDarkTheme = isDark;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
   }
 
   onFileSelected(event: any) {

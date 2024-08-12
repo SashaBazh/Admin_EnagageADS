@@ -1,19 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from '../header/header.component';
+import { Subscription } from 'rxjs';
+import { ThemeService } from '../../theme.service';
 
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css'
 })
-export class TaskComponent {
+export class TaskComponent implements OnInit, OnDestroy {
   taskForm: FormGroup;
+  selectedFile: File | null = null;
+  isDarkTheme: boolean = false;
+  private themeSubscription: Subscription | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private themeService: ThemeService) {
     this.taskForm = this.fb.group({
       taskType: ['', Validators.required],
       title: ['', Validators.required],
@@ -42,6 +50,18 @@ export class TaskComponent {
       endTime: [''],
       taskSize: ['']
     });
+
+    this.themeSubscription = this.themeService.getThemeObservable().subscribe(
+      isDark => {
+        this.isDarkTheme = isDark;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
   }
 
   onTaskTypeChange() {
