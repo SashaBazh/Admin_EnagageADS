@@ -1,0 +1,10 @@
+@media (min-width: 992px) {
+    .navbar-nav {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .nav-item {
+        text-align: center;
+        flex-grow: 1;
+    }
+}
