@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ThemeService } from '../../theme.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-header',

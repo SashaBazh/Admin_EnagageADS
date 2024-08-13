@@ -1,10 +1,14 @@
+// src/app/components/mailings/mailings.component.ts
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
-import { ThemeService } from '../../theme.service';
+import { ThemeService } from '../../services/theme.service';
+import { MailingsService } from '../../services/mailings.service';
+import { submitMailingForm, validateRanks } from '../../functions/mailing.functions';
 import { EditorModule } from '@tinymce/tinymce-angular';
 
 @Component({
@@ -34,10 +38,13 @@ export class MailingsComponent implements OnInit, OnDestroy {
       bullist numlist outdent indent | removeformat | help'
   };
 
-  constructor(private fb: FormBuilder,
-    private themeService: ThemeService) {
+  constructor(
+    private fb: FormBuilder,
+    private themeService: ThemeService,
+    private mailingsService: MailingsService
+  ) {
     this.mailingForm = this.fb.group({
-      rankSelection: ['specific', Validators.required], // 'range' или 'specific'
+      rankSelection: ['specific', Validators.required],
       rankFrom: [''],
       rankTo: [''],
       specificRanks: [''],
@@ -52,6 +59,10 @@ export class MailingsComponent implements OnInit, OnDestroy {
         this.isDarkTheme = isDark;
       }
     );
+
+    this.mailingForm.get('rankSelection')?.valueChanges.subscribe(() => {
+      this.validateForm();
+    });
   }
 
   ngOnDestroy() {
@@ -67,24 +78,30 @@ export class MailingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmit() {
-    if (this.mailingForm.valid) {
-      const formData = new FormData();
-      formData.append('rankSelection', this.mailingForm.get('rankSelection')?.value);
-      if (this.mailingForm.get('rankSelection')?.value === 'range') {
-        formData.append('rankFrom', this.mailingForm.get('rankFrom')?.value);
-        formData.append('rankTo', this.mailingForm.get('rankTo')?.value);
-      } else {
-        formData.append('specificRanks', this.mailingForm.get('specificRanks')?.value);
-      }
-      formData.append('messageText', this.mailingForm.get('messageText')?.value);
-      formData.append('sendTime', this.mailingForm.get('sendTime')?.value);
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      }
+  validateForm() {
+    if (!validateRanks(this.mailingForm)) {
+      this.mailingForm.get('rankFrom')?.setErrors({ invalid: true });
+      this.mailingForm.get('rankTo')?.setErrors({ invalid: true });
+      this.mailingForm.get('specificRanks')?.setErrors({ invalid: true });
+    } else {
+      this.mailingForm.get('rankFrom')?.setErrors(null);
+      this.mailingForm.get('rankTo')?.setErrors(null);
+      this.mailingForm.get('specificRanks')?.setErrors(null);
+    }
+  }
 
-      console.log('Mailing Form Data:', formData);
-      // Здесь можно добавить логику для отправки данных на сервер
+  onSubmit() {
+    this.validateForm();
+    const submission = submitMailingForm(this.mailingForm, this.selectedFile, this.mailingsService);
+    if (submission) {
+      submission.subscribe(
+        response => {
+          console.log('Рассылка успешно создана с ID:', response.id);
+        },
+        error => {
+          console.error('Ошибка при создании рассылки:', error);
+        }
+      );
     }
   }
 }

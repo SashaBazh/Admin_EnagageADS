@@ -1,0 +1,32 @@
+<div class="app-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <app-header></app-header>
+    <div class="container mt-5">
+      <h2>Верификация заданий</h2>
+      <form [formGroup]="verificationForm" (ngSubmit)="onVerificationSubmit()">
+        <div class="mb-3">
+          <label for="taskName" class="form-label">Название задания</label>
+          <input type="text" class="form-control" id="taskName" formControlName="taskName" readonly>
+        </div>
+  
+        <div class="mb-3">
+          <label for="taskDescription" class="form-label">Описание задания</label>
+          <textarea class="form-control" id="taskDescription" formControlName="taskDescription" rows="3" readonly></textarea>
+        </div>
+  
+        <div class="mb-3">
+          <label for="taskLink" class="form-label">Ссылка на задание</label>
+          <input type="url" class="form-control" id="taskLink" formControlName="taskLink" readonly>
+        </div>
+  
+        <div class="mb-3">
+          <label for="taskScreenshot" class="form-label">Скриншот задания</label>
+          <img [src]="taskScreenshotUrl" class="img-fluid" alt="Скриншот задания" *ngIf="taskScreenshotUrl">
+        </div>
+  
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-success" (click)="confirmTask()">Подтвердить</button>
+          <button type="button" class="btn btn-danger" (click)="returnTask()">Вернуть</button>
+        </div>
+      </form>
+    </div>
+  </div>

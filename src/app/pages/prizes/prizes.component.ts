@@ -4,7 +4,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
-import { ThemeService } from '../../theme.service';
+import { ThemeService } from '../../services/theme.service';
+import { PrizeService } from '../../services/prizes.service';
+import { submitPrizeForm, uploadFile } from '../../functions/prize.functions';
 
 @Component({
   selector: 'app-prizes',
@@ -19,12 +21,16 @@ export class PrizeComponent implements OnInit, OnDestroy {
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
 
-  constructor(private fb: FormBuilder, private themeService: ThemeService) {
+  constructor(
+    private fb: FormBuilder,
+    private themeService: ThemeService,
+    private prizeService: PrizeService
+  ) {
     this.prizeForm = this.fb.group({
       type: ['', Validators.required],
       description: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
-      drawDate: ['', Validators.required]
+      drawInterval: ['', Validators.required]
     });
   }
 
@@ -45,22 +51,21 @@ export class PrizeComponent implements OnInit, OnDestroy {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.selectedFile = file;
-      // Здесь можно добавить логику для предварительного просмотра изображения, если нужно
+      this.selectedFile = uploadFile(file);
     }
   }
 
   onSubmit() {
-    if (this.prizeForm.valid && this.selectedFile) {
-      const formData = new FormData();
-      formData.append('image', this.selectedFile);
-      formData.append('type', this.prizeForm.get('type')?.value);
-      formData.append('description', this.prizeForm.get('description')?.value);
-      formData.append('price', this.prizeForm.get('price')?.value);
-      formData.append('drawDate', this.prizeForm.get('drawDate')?.value);
-
-      console.log('Form Data:', formData);
-      // Здесь вы можете отправить formData на сервер
+    const submission = submitPrizeForm(this.prizeForm, this.selectedFile, this.prizeService);
+    if (submission) {
+      submission.subscribe(
+        response => {
+          console.log('Приз успешно создан с ID:', response.id);
+        },
+        error => {
+          console.error('Ошибка при создании приза:', error);
+        }
+      );
     }
   }
 }

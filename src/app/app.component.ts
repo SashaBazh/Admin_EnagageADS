@@ -1,16 +1,14 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ThemeService } from './theme.service';
+import { ThemeService } from './services/theme.service';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit, OnDestroy{
   title = 'site_haos_group';
   isDarkTheme: boolean = false;

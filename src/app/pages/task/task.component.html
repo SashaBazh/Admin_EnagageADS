@@ -34,7 +34,21 @@
 
       <div class="mb-3">
         <label for="category" class="form-label">Категория</label>
-        <input type="text" class="form-control" id="category" formControlName="category" required>
+        <select class="form-select" id="category" formControlName="category" required>
+          <option value="" disabled selected>Выберите категорию</option>
+          <option value="telegram">Telegram</option>
+          <option value="discord">Discord</option>
+          <option value="twitter">Twitter</option>
+          <option value="youtube">YouTube</option>
+          <option value="instagram">Instagram</option>
+          <option value="appstore">App Store</option>
+          <option value="playmarket">Play Market</option>
+          <option value="tiktok">TikTok</option>
+          <option value="facebook">Facebook</option>
+          <option value="vk">VK</option>
+          <option value="pinterest">Pinterest</option>
+          <option value="web">Web</option>
+        </select>
       </div>
 
       <div class="mb-3">

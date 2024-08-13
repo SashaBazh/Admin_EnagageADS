@@ -14,20 +14,20 @@
       </div>
 
       <div class="mb-3">
-        <label for="startDate" class="form-label">Дата начала</label>
-        <input type="date" class="form-control" id="startDate" formControlName="startDate" required>
+        <label for="startTime" class="form-label">Время начала</label>
+        <input type="datetime-local" class="form-control" id="startTime" formControlName="startTime" required>
       </div>
 
       <div class="mb-3">
-        <label for="endDate" class="form-label">Дата окончания</label>
-        <input type="date" class="form-control" id="endDate" formControlName="endDate" required>
+        <label for="endTime" class="form-label">Время окончания</label>
+        <input type="datetime-local" class="form-control" id="endTime" formControlName="endTime" required>
       </div>
 
       <div class="mb-3">
         <label for="type" class="form-label">Тип баннера</label>
         <select class="form-select" id="type" formControlName="type" required>
           <option value="">Выберите тип</option>
-          <option value="large">Большой</option>
+          <option value="big">Большой</option>
           <option value="medium">Средний</option>
           <option value="small">Маленький</option>
         </select>

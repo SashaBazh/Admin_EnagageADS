@@ -4,8 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
-import { ThemeService } from '../../theme.service';
+import { ThemeService } from '../../services/theme.service';
 import { Subscription } from 'rxjs';
+import { BanerService } from '../../services/baner.service';
+import { submitBannerForm, isFormValid } from '../../functions/baner.functions';
 
 @Component({
   selector: 'app-baner',
@@ -16,15 +18,19 @@ import { Subscription } from 'rxjs';
 })
 export class BanerComponent implements OnInit, OnDestroy {
   bannerForm: FormGroup;
-  imageSelected: boolean = false;
+  selectedFile: File | null = null;
   isDarkTheme = false;
   private themeSubscription: Subscription | undefined;
   
-  constructor(private fb: FormBuilder, private themeService: ThemeService) {
+  constructor(
+    private fb: FormBuilder, 
+    private themeService: ThemeService,
+    private banerService: BanerService
+  ) {
     this.bannerForm = this.fb.group({
       link: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
       type: ['', Validators.required]
     });
   }
@@ -41,27 +47,25 @@ export class BanerComponent implements OnInit, OnDestroy {
     }
   }
 
-
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.imageSelected = true;
-      console.log('Файл выбран:', file);
-    } else {
-      this.imageSelected = false;
-    }
+    this.selectedFile = event.target.files[0];
   }
 
   onSubmit() {
-    if (this.bannerForm.valid && this.imageSelected) {
-      console.log('Форма отправлена:', this.bannerForm.value);
-      // Здесь вы можете добавить логику для отправки данных на сервер
-    } else {
-      console.log('Форма невалидна');
+    const submission = submitBannerForm(this.bannerForm, this.selectedFile, this.banerService);
+    if (submission) {
+      submission.subscribe(
+        response => {
+          console.log('Баннер успешно создан с ID:', response.id);
+        },
+        error => {
+          console.error('Ошибка при создании баннера:', error);
+        }
+      );
     }
   }
 
   isFormValid(): boolean {
-    return this.bannerForm.valid && this.imageSelected;
+    return isFormValid(this.bannerForm, this.selectedFile);
   }
 }

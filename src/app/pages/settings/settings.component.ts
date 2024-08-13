@@ -1,11 +1,15 @@
+// src/app/components/settings/settings.component.ts
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
-import { ThemeService } from '../../theme.service';
-import { Options, LabelType } from '@angular-slider/ngx-slider';
+import { ThemeService } from '../../services/theme.service';
+import { SettingsService } from '../../services/settings.service';
+import { submitSettingsForm } from '../../functions/settings.functions';
+import { Options } from '@angular-slider/ngx-slider';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @Component({
@@ -30,7 +34,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     draggableRange: true
   };
 
-  constructor(private fb: FormBuilder, private themeService: ThemeService) {
+  constructor(
+    private fb: FormBuilder, 
+    private themeService: ThemeService,
+    private settingsService: SettingsService
+  ) {
     this.settingsForm = this.fb.group({
       rankSystem: ['', Validators.required],
       farmingSpeed: [1, [Validators.required, Validators.min(1)]],
@@ -55,14 +63,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if (this.settingsForm.valid) {
-      const formData = {
-        ...this.settingsForm.value,
-        rankThresholdsLow: this.rankThresholdsValue,
-        rankThresholdsHigh: this.rankThresholdsHighValue
-      };
-      console.log('Settings Form Data:', formData);
-      // Здесь логика отправки настроек на сервер
+    const submission = submitSettingsForm(this.settingsForm, this.rankThresholdsValue, this.rankThresholdsHighValue, this.settingsService);
+    if (submission) {
+      submission.subscribe(
+        response => {
+          console.log('Настройки успешно применены:', response.message);
+        },
+        error => {
+          console.error('Ошибка при применении настроек:', error);
+        }
+      );
     }
   }
 }

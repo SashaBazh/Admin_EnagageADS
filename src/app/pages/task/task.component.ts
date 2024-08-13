@@ -4,7 +4,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
-import { ThemeService } from '../../theme.service';
+import { ThemeService } from '../../services/theme.service';
+import { TaskService } from '../../services/task.service';
+import { submitTaskForm, onTaskTypeChange } from '../../functions/task.functions';
 
 @Component({
   selector: 'app-task',
@@ -21,7 +23,9 @@ export class TaskComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private themeService: ThemeService) {
+    private themeService: ThemeService,
+    private taskService: TaskService
+  ) {
     this.taskForm = this.fb.group({
       taskType: ['', Validators.required],
       title: ['', Validators.required],
@@ -36,21 +40,7 @@ export class TaskComponent implements OnInit, OnDestroy {
     });
   }
 
-
   ngOnInit() {
-    this.taskForm = this.fb.group({
-      taskType: ['', Validators.required],
-      title: ['', Validators.required],
-      price: ['', [Validators.required, Validators.min(0)]],
-      actionName: ['', Validators.required],
-      limit: ['', [Validators.required, Validators.min(1)]],
-      category: ['', Validators.required],
-      link: ['', [Validators.required, Validators.pattern('https?://.+')]],
-      startTime: [''],
-      endTime: [''],
-      taskSize: ['']
-    });
-
     this.themeSubscription = this.themeService.getThemeObservable().subscribe(
       isDark => {
         this.isDarkTheme = isDark;
@@ -65,30 +55,24 @@ export class TaskComponent implements OnInit, OnDestroy {
   }
 
   onTaskTypeChange() {
-    const taskType = this.taskForm.get('taskType')?.value;
-    if (taskType === 'daily') {
-      this.taskForm.get('startTime')?.setValidators(Validators.required);
-      this.taskForm.get('endTime')?.setValidators(Validators.required);
-      this.taskForm.get('taskSize')?.setValidators(Validators.required);
-    } else {
-      this.taskForm.get('startTime')?.clearValidators();
-      this.taskForm.get('endTime')?.clearValidators();
-      this.taskForm.get('taskSize')?.clearValidators();
-    }
-    this.taskForm.get('startTime')?.updateValueAndValidity();
-    this.taskForm.get('endTime')?.updateValueAndValidity();
-    this.taskForm.get('taskSize')?.updateValueAndValidity();
+    onTaskTypeChange(this.taskForm);
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    // Здесь вы можете обработать загрузку файла
+    this.selectedFile = event.target.files[0];
   }
 
   onSubmit() {
-    if (this.taskForm.valid) {
-      console.log(this.taskForm.value);
-      // Здесь вы можете отправить данные на сервер
+    const submission = submitTaskForm(this.taskForm, this.selectedFile, this.taskService);
+    if (submission) {
+      submission.subscribe(
+        response => {
+          console.log('Задание успешно создано с ID:', response.id);
+        },
+        error => {
+          console.error('Ошибка при создании задания:', error);
+        }
+      );
     }
   }
 }
