@@ -1,6 +1,4 @@
-// src/app/components/settings/settings.component.ts
-
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -11,18 +9,21 @@ import { SettingsService } from '../../services/settings.service';
 import { submitSettingsForm } from '../../functions/settings.functions';
 import { Options } from '@angular-slider/ngx-slider';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { ModalComponent } from '../../pages/modal/modal.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, NgxSliderModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, NgxSliderModule, ModalComponent],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css'
 })
 export class SettingsComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalComponent) modal!: ModalComponent;
   settingsForm: FormGroup;
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
+  modalMessage: string = '';
 
   rankThresholdsValue: number = 0;
   rankThresholdsHighValue: number = 1000;
@@ -67,10 +68,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (submission) {
       submission.subscribe(
         response => {
-          console.log('Настройки успешно применены:', response.message);
+          this.modalMessage = `Настройки успешно применены: ${response.message}`;
+          this.modal.show();
         },
         error => {
-          console.error('Ошибка при применении настроек:', error);
+          this.modalMessage = `Ошибка при применении настроек: ${error.message}`;
+          this.modal.show();
         }
       );
     }

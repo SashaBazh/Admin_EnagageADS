@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,22 +8,25 @@ import { ThemeService } from '../../services/theme.service';
 import { Subscription } from 'rxjs';
 import { BanerService } from '../../services/baner.service';
 import { submitBannerForm, isFormValid } from '../../functions/baner.functions';
+import { ModalComponent } from '../../pages/modal/modal.component';
 
 @Component({
   selector: 'app-baner',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, HeaderComponent, ModalComponent],
   templateUrl: './baner.component.html',
   styleUrl: './baner.component.css'
 })
 export class BanerComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalComponent) modal!: ModalComponent;
   bannerForm: FormGroup;
   selectedFile: File | null = null;
   isDarkTheme = false;
   private themeSubscription: Subscription | undefined;
-  
+  modalMessage: string = '';
+
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private themeService: ThemeService,
     private banerService: BanerService
   ) {
@@ -56,10 +59,12 @@ export class BanerComponent implements OnInit, OnDestroy {
     if (submission) {
       submission.subscribe(
         response => {
-          console.log('Баннер успешно создан с ID:', response.id);
+          this.modalMessage = `Баннер успешно создан с ID: ${response.id}`;
+          this.modal.show();
         },
         error => {
-          console.error('Ошибка при создании баннера:', error);
+          this.modalMessage = `Ошибка при создании баннера: ${error.message}`;
+          this.modal.show();
         }
       );
     }
@@ -68,4 +73,5 @@ export class BanerComponent implements OnInit, OnDestroy {
   isFormValid(): boolean {
     return isFormValid(this.bannerForm, this.selectedFile);
   }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,19 +7,23 @@ import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { TaskService } from '../../services/task.service';
 import { submitTaskForm, onTaskTypeChange } from '../../functions/task.functions';
+import { ModalComponent } from '../../pages/modal/modal.component';
 
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, ModalComponent],
   templateUrl: './task.component.html',
   styleUrl: './task.component.css'
 })
 export class TaskComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalComponent) modal!: ModalComponent;
+
   taskForm: FormGroup;
   selectedFile: File | null = null;
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
+  modalMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -67,10 +71,12 @@ export class TaskComponent implements OnInit, OnDestroy {
     if (submission) {
       submission.subscribe(
         response => {
-          console.log('Задание успешно создано с ID:', response.id);
+          this.modalMessage = `Задание успешно создано с ID: ${response.id}`;
+          this.modal.show();
         },
         error => {
-          console.error('Ошибка при создании задания:', error);
+          this.modalMessage = `Ошибка при создании задания: ${error.message}`;
+          this.modal.show();
         }
       );
     }

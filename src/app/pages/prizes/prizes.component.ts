@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,19 +7,22 @@ import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { PrizeService } from '../../services/prizes.service';
 import { submitPrizeForm, uploadFile } from '../../functions/prize.functions';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-prizes',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, ModalComponent],
   templateUrl: './prizes.component.html',
   styleUrl: './prizes.component.css'
 })
 export class PrizeComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalComponent) modal!: ModalComponent;
   prizeForm: FormGroup;
   selectedFile: File | null = null;
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
+  modalMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -60,10 +63,12 @@ export class PrizeComponent implements OnInit, OnDestroy {
     if (submission) {
       submission.subscribe(
         response => {
-          console.log('Приз успешно создан с ID:', response.id);
+          this.modalMessage = `Приз успешно создано с ID: ${response.id}`;
+          this.modal.show();
         },
         error => {
-          console.error('Ошибка при создании приза:', error);
+          this.modalMessage = `Ошибка при создании Приза: ${error.message}`;
+          this.modal.show();
         }
       );
     }

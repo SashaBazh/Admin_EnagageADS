@@ -22,17 +22,19 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-                "src/favicon.ico",
-                "src/assets",
-                "src/assets/images/",
-                "src/assets/images/icons/",
-                "src/assets/images/NFT/"
+              "src/favicon.ico",
+              "src/assets",
+              "src/assets/images/",
+              "src/assets/images/icons/",
+              "src/assets/images/NFT/"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -83,16 +85,18 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-                "src/favicon.ico",
-                "src/assets",
-                "src/assets/images/",
-                "src/assets/images/icons/",
-                "src/assets/images/NFT/"
+              "src/favicon.ico",
+              "src/assets",
+              "src/assets/images/",
+              "src/assets/images/icons/",
+              "src/assets/images/NFT/"
             ],
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           }
         }
       }

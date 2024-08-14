@@ -1,0 +1,15 @@
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0 auto;
+}
+.modal-content {
+  margin: auto;
+}
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 500px;
+  }
+}

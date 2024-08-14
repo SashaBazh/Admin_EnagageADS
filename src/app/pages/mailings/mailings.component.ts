@@ -1,6 +1,6 @@
 // src/app/components/mailings/mailings.component.ts
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -10,19 +10,22 @@ import { ThemeService } from '../../services/theme.service';
 import { MailingsService } from '../../services/mailings.service';
 import { submitMailingForm, validateRanks } from '../../functions/mailing.functions';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { ModalComponent } from '../../pages/modal/modal.component';
 
 @Component({
   selector: 'app-mailings',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, EditorModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, EditorModule, ModalComponent],
   templateUrl: './mailings.component.html',
   styleUrl: './mailings.component.css'
 })
 export class MailingsComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalComponent) modal!: ModalComponent;
   mailingForm: FormGroup;
   selectedFile: File | null = null;
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
+  modalMessage: string = '';
 
   tinyMceConfig = {
     height: 300,
@@ -96,10 +99,12 @@ export class MailingsComponent implements OnInit, OnDestroy {
     if (submission) {
       submission.subscribe(
         response => {
-          console.log('Рассылка успешно создана с ID:', response.id);
+          this.modalMessage = `Рассылка успешно создана с ID: ${response.id}`;
+          this.modal.show();
         },
         error => {
-          console.error('Ошибка при создании рассылки:', error);
+          this.modalMessage = `Ошибка при создании рассылки: ${error.message}`;
+          this.modal.show();
         }
       );
     }

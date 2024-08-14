@@ -8,3 +8,20 @@
         flex-grow: 1;
     }
 }
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating-logo {
+    animation: rotate 10s linear infinite;
+}
+
+.rotating-logo:hover {
+    animation-play-state: paused;
+}

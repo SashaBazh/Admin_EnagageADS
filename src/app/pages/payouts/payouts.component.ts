@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -7,18 +7,21 @@ import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { PayoutsService } from '../../services/payouts.service';
 import { downloadReport, downloadCurrentPayouts } from '../../functions/payout.functions';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-payouts',
   standalone: true,
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, ModalComponent],
   templateUrl: './payouts.component.html',
   styleUrl: './payouts.component.css'
 })
 export class PayoutsComponent implements OnInit, OnDestroy {
+  @ViewChild(ModalComponent) modal!: ModalComponent;
   payoutForm: FormGroup;
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
+  modalMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -46,10 +49,28 @@ export class PayoutsComponent implements OnInit, OnDestroy {
   }
 
   downloadReport() {
-    downloadReport(this.payoutForm, this.payoutService);
+    downloadReport(this.payoutForm, this.payoutService).subscribe(
+      (response) => {
+        this.modalMessage = 'Отчет успешно скачан';
+        this.modal.show();
+      },
+      (error) => {
+        this.modalMessage = `Ошибка при скачивании отчета: ${error.message}`;
+        this.modal.show();
+      }
+    );
   }
-
+  
   downloadCurrentPayouts() {
-    downloadCurrentPayouts(this.payoutService);
+    downloadCurrentPayouts(this.payoutService).subscribe(
+      (response) => {
+        this.modalMessage = 'Текущие выплаты успешно скачаны';
+        this.modal.show();
+      },
+      (error) => {
+        this.modalMessage = `Ошибка при скачивании текущих выплат: ${error.message}`;
+        this.modal.show();
+      }
+    );
   }
 }
