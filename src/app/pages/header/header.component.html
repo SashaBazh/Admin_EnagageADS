@@ -10,24 +10,26 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/baner" routerLinkActive="active">Банер</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/task" routerLinkActive="active">Задания</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/prize" routerLinkActive="active">Призы</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/settings" routerLinkActive="active">Настройки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/mailings" routerLinkActive="active">Рассылки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/payouts" routerLinkActive="active">Выплаты</a>
-                    </li>
+                    <ng-container *ngIf="isAdmin">
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/baner" routerLinkActive="active">Банер</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/task" routerLinkActive="active">Задания</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/prize" routerLinkActive="active">Призы</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/settings" routerLinkActive="active">Настройки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/mailings" routerLinkActive="active">Рассылки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/payouts" routerLinkActive="active">Выплаты</a>
+                        </li>
+                    </ng-container>
                     <li class="nav-item">
                         <a class="nav-link" routerLink="/task-verification" routerLinkActive="active">Верификация заданий</a>
                     </li>

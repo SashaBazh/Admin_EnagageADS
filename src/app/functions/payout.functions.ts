@@ -3,29 +3,13 @@ import { PayoutsService } from '../services/payouts.service';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-export function downloadReport(payoutForm: FormGroup, payoutService: PayoutsService): Observable<string> {
-  if (payoutForm.valid) {
-    const startDate = payoutForm.get('startDate')?.value;
-    const endDate = payoutForm.get('endDate')?.value;
-    return payoutService.getPayoutReport(startDate, endDate).pipe(
-      map((data: Blob) => {
-        downloadFile(data, `payout_report_${startDate}_${endDate}.csv`);
-        return 'Отчет успешно скачан';
-      }),
-      catchError(error => {
-        console.error('Error downloading report:', error);
-        return throwError('Ошибка при скачивании отчета');
-      })
-    );
-  } else {
-    return throwError('Форма невалидна');
-  }
-}
-
 export function downloadCurrentPayouts(payoutService: PayoutsService): Observable<string> {
   return payoutService.getCurrentPayouts().pipe(
-    map((data: Blob) => {
-      downloadFile(data, 'current_payouts.csv');
+    map((data: any[]) => {
+      console.log('Данные, полученные с бэкенда:', data);
+      const jsonString = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      downloadFile(blob, 'current_payouts.json');
       return 'Текущие выплаты успешно скачаны';
     }),
     catchError(error => {
@@ -41,4 +25,5 @@ function downloadFile(data: Blob, fileName: string) {
   link.href = downloadURL;
   link.download = fileName;
   link.click();
+  window.URL.revokeObjectURL(downloadURL);
 }

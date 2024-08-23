@@ -1,32 +1,49 @@
 <div class="app-container" [ngClass]="{'dark-theme': isDarkTheme}">
-    <app-header></app-header>
-    <div class="container mt-5">
-      <h2>Верификация заданий</h2>
-      <form [formGroup]="verificationForm" (ngSubmit)="onVerificationSubmit()">
-        <div class="mb-3">
-          <label for="taskName" class="form-label">Название задания</label>
-          <input type="text" class="form-control" id="taskName" formControlName="taskName" readonly>
-        </div>
-  
-        <div class="mb-3">
-          <label for="taskDescription" class="form-label">Описание задания</label>
-          <textarea class="form-control" id="taskDescription" formControlName="taskDescription" rows="3" readonly></textarea>
-        </div>
-  
-        <div class="mb-3">
-          <label for="taskLink" class="form-label">Ссылка на задание</label>
-          <input type="url" class="form-control" id="taskLink" formControlName="taskLink" readonly>
-        </div>
-  
-        <div class="mb-3">
-          <label for="taskScreenshot" class="form-label">Скриншот задания</label>
-          <img [src]="taskScreenshotUrl" class="img-fluid" alt="Скриншот задания" *ngIf="taskScreenshotUrl">
-        </div>
-  
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-success" (click)="confirmTask()">Подтвердить</button>
-          <button type="button" class="btn btn-danger" (click)="returnTask()">Вернуть</button>
-        </div>
-      </form>
+  <app-header></app-header>
+  <div class="container mt-5">
+    <h2>Верификация заданий</h2>
+    <div *ngIf="tasks.length === 0; else tasksList">
+      <p>Заданий для верификации нет.</p>
     </div>
+    <ng-template #tasksList>
+      <div class="row">
+        <div class="col-md-6 mb-3" *ngFor="let task of tasks">
+          <div class="card">
+            <div class="card-header text-center">
+              <h5>Тип задания: {{ (task.start_time && task.end_time && task.task_size) ? 'Ежедневное' : 'Обычное' }}
+              </h5>
+            </div>
+            <img *ngIf="task.proof_photo" [src]="getTaskImageUrl(task.proof_photo)"
+              style="display: block; margin: 10px auto 0; max-width: 100%; height: auto;" alt="Фото доказательства">
+
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>ID выполненного задания:</strong> {{ task.completed_task_id }}</li>
+                <li class="list-group-item"><strong>ID задания:</strong> {{ task.task_id }}</li>
+                <li class="list-group-item"><strong>Название:</strong> {{ task.name }}</li>
+                <li class="list-group-item"><strong>Описание:</strong> {{ task.description }}</li>
+                <li class="list-group-item"><strong>Награда:</strong> {{ task.reward }}</li>
+                <li class="list-group-item"><strong>Платформа:</strong> {{ task.platform }}</li>
+                <li class="list-group-item"><strong>Ссылка:</strong> <a [href]="task.link" target="_blank">{{ task.link
+                    }}</a></li>
+                <li class="list-group-item"><strong>Лимит:</strong> {{ task.limit }}</li>
+                <li class="list-group-item" *ngIf="task.start_time"><strong>Начало:</strong> {{ task.start_time |
+                  date:'medium' }}</li>
+                <li class="list-group-item" *ngIf="task.end_time"><strong>Окончание:</strong> {{ task.end_time |
+                  date:'medium' }}</li>
+                <li class="list-group-item" *ngIf="task.task_size"><strong>Размер задания:</strong> {{ task.task_size }}
+                </li>
+                <li class="list-group-item" *ngIf="task.social_link"><strong>Ссылка на соц. сеть:</strong> <a
+                    [href]="task.social_link" target="_blank">{{ task.social_link }}</a></li>
+              </ul>
+              <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-success" (click)="confirmTask(task.completed_task_id)">Подтвердить</button>
+                <button class="btn btn-danger" (click)="returnTask(task.completed_task_id)">Вернуть</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </div>
+</div>

@@ -1,8 +1,7 @@
 :host {
     display: block;
   }
-  
-  /* Светлая тема (по умолчанию) */
+
   :root {
     --background-color: #f8f9fa;
     --text-color: #333333;
@@ -13,7 +12,6 @@
     --btn-primary-text: #ffffff;
   }
   
-  /* Темная тема */
   .dark-theme {
     --background-color: #333333;
     --text-color: #ffffff;
@@ -24,7 +22,6 @@
     --btn-primary-text: #ffffff;
   }
   
-  /* Применение стилей */
   .app-container {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -78,14 +75,12 @@
     opacity: 0.65;
   }
   
-  /* Стили для file input */
   input[type="file"] {
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
   }
-  
-  /* Стили для time input */
+
   input[type="time"] {
     padding: 0.375rem 0.75rem;
   }

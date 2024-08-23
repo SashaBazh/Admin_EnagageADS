@@ -1,57 +1,46 @@
 import { FormGroup } from '@angular/forms';
-import { PrizeService } from '../services/prizes.service';
-import { Observable } from 'rxjs';
 
-export interface PrizeResponse {
-  id: number;
-}
-
-export function createPrizeFormData(prizeForm: FormGroup, selectedFile: File | null): FormData {
+export function createPrizeFormData(prizeForm: FormGroup, selectedFile: File): FormData {
   const formData = new FormData();
-  formData.append('type', prizeForm.get('type')?.value);
+  formData.append('image', selectedFile);
+  formData.append('prize_type', prizeForm.get('type')?.value);
   formData.append('description', prizeForm.get('description')?.value);
-  formData.append('price', prizeForm.get('price')?.value);
+  
+  const price = Number(prizeForm.get('price')?.value);
+  if (isNaN(price)) {
+    console.error('Invalid price value:', prizeForm.get('price')?.value);
+    throw new Error('Invalid price value');
+  }
+  formData.append('price', price.toString());
+
   formData.append('draw_date', calculateDrawDate(prizeForm.get('drawInterval')?.value));
   
-  if (selectedFile) {
-    formData.append('image', selectedFile);
-  }
-
+  console.log('FormData contents:');
+  formData.forEach((value, key) => {
+    console.log(key, value);
+  });
+  
   return formData;
-}
-
-export function submitPrizeForm(prizeForm: FormGroup, selectedFile: File | null, prizeService: PrizeService): Observable<PrizeResponse> | null {
-  if (prizeForm.valid) {
-    const formData = createPrizeFormData(prizeForm, selectedFile);
-    return prizeService.createPrize(formData);
-  } else {
-    console.log('Форма невалидна');
-    return null;
-  }
-}
-
-export function uploadFile(file: File): File {
-  return file;
 }
 
 function calculateDrawDate(interval: string): string {
   const now = new Date();
   switch (interval) {
     case 'weekly':
-      now.setDate(now.getDate() + 7);
+      now.setUTCDate(now.getUTCDate() + 7);
       break;
     case 'monthly':
-      now.setMonth(now.getMonth() + 1);
+      now.setUTCMonth(now.getUTCMonth() + 1);
       break;
     case 'quarterly':
-      now.setMonth(now.getMonth() + 3);
+      now.setUTCMonth(now.getUTCMonth() + 3);
       break;
     case 'semiannually':
-      now.setMonth(now.getMonth() + 6);
+      now.setUTCMonth(now.getUTCMonth() + 6);
       break;
     case 'annually':
-      now.setFullYear(now.getFullYear() + 1);
+      now.setUTCFullYear(now.getUTCFullYear() + 1);
       break;
   }
-  return now.toISOString();
+  return now.toISOString().replace(/\.\d{3}Z$/, 'Z');
 }

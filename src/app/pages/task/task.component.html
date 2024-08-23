@@ -5,7 +5,7 @@
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
         <label for="taskType" class="form-label">Тип задания</label>
-        <select class="form-select" id="taskType" formControlName="taskType" (change)="onTaskTypeChange()" required>
+        <select class="form-select" id="taskType" formControlName="taskType" (change)="this.onTaskTypeChange()" required>
           <option value="">Выберите тип задания</option>
           <option value="daily">Ежедневное</option>
           <option value="regular">Обычное</option>
@@ -18,13 +18,13 @@
       </div>
 
       <div class="mb-3">
-        <label for="price" class="form-label">Цена</label>
-        <input type="number" class="form-control" id="price" formControlName="price" required>
+        <label for="description" class="form-label">Описание</label>
+        <textarea class="form-control" id="description" formControlName="description" required></textarea>
       </div>
 
       <div class="mb-3">
-        <label for="actionName" class="form-label">Название действия</label>
-        <input type="text" class="form-control" id="actionName" formControlName="actionName" required>
+        <label for="price" class="form-label">Цена</label>
+        <input type="number" class="form-control" id="price" formControlName="price" required>
       </div>
 
       <div class="mb-3">
@@ -36,24 +36,18 @@
         <label for="category" class="form-label">Категория</label>
         <select class="form-select" id="category" formControlName="category" required>
           <option value="" disabled selected>Выберите категорию</option>
-          <option value="telegram">Telegram</option>
-          <option value="discord">Discord</option>
-          <option value="twitter">Twitter</option>
-          <option value="youtube">YouTube</option>
-          <option value="instagram">Instagram</option>
-          <option value="appstore">App Store</option>
-          <option value="playmarket">Play Market</option>
-          <option value="tiktok">TikTok</option>
-          <option value="facebook">Facebook</option>
-          <option value="vk">VK</option>
-          <option value="pinterest">Pinterest</option>
-          <option value="web">Web</option>
+          <option value="telegram">Telegram</option> <option value="discord">Discord</option>
+          <option value="twitter">Twitter</option> <option value="youtube">YouTube</option>
+          <option value="instagram">Instagram</option> <option value="appstore">App Store</option>
+          <option value="playmarket">Play Market</option> <option value="tiktok">TikTok</option>
+          <option value="facebook">Facebook</option> <option value="vk">VK</option>
+          <option value="pinterest">Pinterest</option> <option value="web">Web</option>
         </select>
       </div>
 
       <div class="mb-3">
-        <label for="image" class="form-label">Картинка (не обязательно)</label>
-        <input type="file" class="form-control" id="image" (change)="onFileSelected($event)" accept="image/*">
+        <label for="photo" class="form-label">Картинка (не обязательно)</label>
+        <input type="file" class="form-control" id="photo" (change)="onFileSelected($event)" accept="image/*">
       </div>
 
       <div class="mb-3">
@@ -64,12 +58,12 @@
       <ng-container *ngIf="taskForm.get('taskType')?.value === 'daily'">
         <div class="mb-3">
           <label for="startTime" class="form-label">Время начала</label>
-          <input type="time" class="form-control" id="startTime" formControlName="startTime" required>
+          <input type="datetime-local" class="form-control" id="startTime" formControlName="startTime" required>
         </div>
 
         <div class="mb-3">
           <label for="endTime" class="form-label">Время окончания</label>
-          <input type="time" class="form-control" id="endTime" formControlName="endTime" required>
+          <input type="datetime-local" class="form-control" id="endTime" formControlName="endTime" required>
         </div>
 
         <div class="mb-3">

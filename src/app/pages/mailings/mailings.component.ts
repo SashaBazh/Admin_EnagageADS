@@ -1,33 +1,32 @@
-// src/app/components/mailings/mailings.component.ts
-
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
-import { ThemeService } from '../../services/theme.service';
 import { MailingsService } from '../../services/mailings.service';
-import { submitMailingForm, validateRanks } from '../../functions/mailing.functions';
-import { EditorModule } from '@tinymce/tinymce-angular';
+import { validateRanks } from '../../functions/mailing.functions'; 
+import { EditorModule } from '@tinymce/tinymce-angular'; 
+import { HeaderComponent } from '../header/header.component';
 import { ModalComponent } from '../../pages/modal/modal.component';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-mailings',
   standalone: true,
   imports: [RouterModule, ReactiveFormsModule, CommonModule, HeaderComponent, EditorModule, ModalComponent],
-  templateUrl: './mailings.component.html',
-  styleUrl: './mailings.component.css'
+  templateUrl: './mailings.component.html', 
+  styleUrls: ['./mailings.component.css']  
 })
 export class MailingsComponent implements OnInit, OnDestroy {
-  @ViewChild(ModalComponent) modal!: ModalComponent;
+  @ViewChild(ModalComponent) modal!: ModalComponent; 
   mailingForm: FormGroup;
   selectedFile: File | null = null;
   isDarkTheme: boolean = false;
   private themeSubscription: Subscription | null = null;
   modalMessage: string = '';
+  submissionResult: string = '';  
 
-  tinyMceConfig = {
+  tinyMceConfig = { 
     height: 300,
     menubar: false,
     plugins: [
@@ -48,12 +47,13 @@ export class MailingsComponent implements OnInit, OnDestroy {
   ) {
     this.mailingForm = this.fb.group({
       rankSelection: ['specific', Validators.required],
-      rankFrom: [''],
-      rankTo: [''],
-      specificRanks: [''],
+      rankFrom: [''], 
+      rankTo: [''],    
+      specificRanks: [''],  
       messageText: ['', Validators.required],
       sendTime: ['', Validators.required]
     });
+    
   }
 
   ngOnInit() {
@@ -75,11 +75,9 @@ export class MailingsComponent implements OnInit, OnDestroy {
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-    }
+    this.selectedFile = event.target.files[0];
   }
+  
 
   validateForm() {
     if (!validateRanks(this.mailingForm)) {
@@ -94,19 +92,36 @@ export class MailingsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.validateForm();
-    const submission = submitMailingForm(this.mailingForm, this.selectedFile, this.mailingsService);
-    if (submission) {
-      submission.subscribe(
+    if (this.mailingForm.valid) {
+      const formData = new FormData();
+      formData.append('message', this.mailingForm.get('messageText')?.value || '');
+      formData.append('send_time', new Date(this.mailingForm.get('sendTime')?.value).toISOString());
+  
+      const ranks = this.mailingForm.get('rankSelection')?.value === 'range'
+        ? Array.from({ length: this.mailingForm.get('rankTo')?.value - this.mailingForm.get('rankFrom')?.value + 1 }, (_, i) => i + this.mailingForm.get('rankFrom')?.value)
+        : this.mailingForm.get('specificRanks')?.value.split(',').map((rank: string) => parseInt(rank.trim()));
+  
+      formData.append('ranks', JSON.stringify(ranks));
+  
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+  
+      this.mailingsService.createMailing(formData).subscribe(
         response => {
-          this.modalMessage = `Рассылка успешно создана с ID: ${response.id}`;
+          this.modalMessage = `Рассылка успешно создана`;
           this.modal.show();
+          this.mailingForm.reset();
+          this.selectedFile = null; 
         },
         error => {
           this.modalMessage = `Ошибка при создании рассылки: ${error.message}`;
           this.modal.show();
         }
       );
+    } else {
+      console.log('Форма невалидна');
     }
   }
+  
 }

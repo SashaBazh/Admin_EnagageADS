@@ -2,43 +2,84 @@
     <app-header></app-header>
 
     <div class="container mt-5">
-        <h2>Системные настройки</h2>
+        <h2 class="mb-4">Системные настройки</h2>
         <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-                <label for="rankSystem" class="form-label">Система рангов</label>
-                <input type="text" class="form-control" id="rankSystem" formControlName="rankSystem" placeholder="Введите название ранга">
+            <div class="card mb-4" *ngIf="settingsForm">
+                <div class="card-header">
+                    <h3 class="mb-0">Текущие настройки</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Название ранга:</strong> {{ settingsForm.get('rank_name')?.value }}</p>
+                    <p><strong>Нижний порог:</strong> {{ settingsForm.get('threshold_low')?.value }}</p>
+                    <p><strong>Верхний порог:</strong> {{ settingsForm.get('threshold_high')?.value }}</p>
+                    <p><strong>Скорость фарминга:</strong> {{ settingsForm.get('farming_speed')?.value }}</p>
+                    <p><strong>Вознаграждение за фарминг:</strong> {{ settingsForm.get('farming_rewards')?.value }}</p>
+                    <p><strong>Реферальное вознаграждение (Уровень 1):</strong> {{ settingsForm.get('referral_level1')?.value }}</p>
+                    <p><strong>Реферальное вознаграждение (Уровень 2):</strong> {{ settingsForm.get('referral_level2')?.value }}</p>
+                    <p><strong>Реферальное вознаграждение (Уровень 3):</strong> {{ settingsForm.get('referral_level3')?.value }}</p>
+                    <p><strong>Глубина реферальной программы:</strong> {{ settingsForm.get('referral_depth')?.value }}</p>
+                </div>
+            </div>
+        </form>
+        <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Система рангов</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="rank_name" class="form-label">Название ранга:</label>
+                        <input id="rank_name" formControlName="rank_name" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="threshold_low" class="form-label">Нижний порог:</label>
+                        <input id="threshold_low" type="number" formControlName="threshold_low" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="threshold_high" class="form-label">Верхний порог:</label>
+                        <input id="threshold_high" type="number" formControlName="threshold_high" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="farming_speed" class="form-label">Скорость фарминга:</label>
+                        <input id="farming_speed" type="number" formControlName="farming_speed" class="form-control">
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Пороги вхождения в ранги</label>
-                <ngx-slider [(value)]="rankThresholdsValue" 
-                            [(highValue)]="rankThresholdsHighValue" 
-                            [options]="rankThresholdsOptions">
-                </ngx-slider>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Вознаграждения за фарминг</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="farming_rewards" class="form-label">Вознаграждение:</label>
+                        <input id="farming_rewards" type="number" formControlName="farming_rewards" class="form-control">
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label for="farmingSpeed" class="form-label">Скорость фарминга (в часах)</label>
-                <input type="number" class="form-control" id="farmingSpeed" formControlName="farmingSpeed" min="1">
-            </div>
-
-            <div class="mb-3">
-                <label for="farmingReward" class="form-label">Вознаграждение за фарминг</label>
-                <input type="number" class="form-control" id="farmingReward" formControlName="farmingReward" min="0">
-            </div>
-
-            <div class="mb-3">
-                <label for="referralReward" class="form-label">Реферальные вознаграждения (%)</label>
-                <input type="number" class="form-control" id="referralReward" formControlName="referralReward" min="0" max="100">
-            </div>
-
-            <div class="mb-3">
-                <label for="referralDepth" class="form-label">Глубина рефки</label>
-                <select class="form-select" id="referralDepth" formControlName="referralDepth">
-                    <option value="1">1 уровень</option>
-                    <option value="2">2 уровня</option>
-                    <option value="3">3 уровня</option>
-                </select>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="mb-0">Реферальные вознаграждения</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="referral_level1" class="form-label">Уровень 1:</label>
+                        <input id="referral_level1" type="number" formControlName="referral_level1" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="referral_level2" class="form-label">Уровень 2:</label>
+                        <input id="referral_level2" type="number" formControlName="referral_level2" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="referral_level3" class="form-label">Уровень 3:</label>
+                        <input id="referral_level3" type="number" formControlName="referral_level3" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="referral_depth" class="form-label">Глубина реферальной программы:</label>
+                        <input id="referral_depth" type="number" formControlName="referral_depth" class="form-control">
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary" [disabled]="!settingsForm.valid">Применить настройки</button>

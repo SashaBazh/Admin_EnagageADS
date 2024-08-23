@@ -7,7 +7,6 @@ import { HeaderComponent } from '../header/header.component';
 import { ThemeService } from '../../services/theme.service';
 import { Subscription } from 'rxjs';
 import { BanerService } from '../../services/baner.service';
-import { submitBannerForm, isFormValid } from '../../functions/baner.functions';
 import { ModalComponent } from '../../pages/modal/modal.component';
 
 @Component({
@@ -31,7 +30,7 @@ export class BanerComponent implements OnInit, OnDestroy {
     private banerService: BanerService
   ) {
     this.bannerForm = this.fb.group({
-      link: ['', Validators.required],
+      link: [''], 
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
       type: ['', Validators.required]
@@ -55,23 +54,27 @@ export class BanerComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const submission = submitBannerForm(this.bannerForm, this.selectedFile, this.banerService);
-    if (submission) {
-      submission.subscribe(
+    if (this.bannerForm.valid && this.selectedFile) {
+      const formData = new FormData();
+      formData.append('image', this.selectedFile);
+      formData.append('link', this.bannerForm.get('link')?.value || '');
+      formData.append('start_time', this.bannerForm.get('startTime')?.value);
+      formData.append('end_time', this.bannerForm.get('endTime')?.value);
+      formData.append('banner_type', this.bannerForm.get('type')?.value); 
+      this.banerService.createBanner(formData).subscribe(
         response => {
-          this.modalMessage = `Баннер успешно создан с ID: ${response.id}`;
+          this.modalMessage = `Баннер успешно создан с ID: ${response.banner_id}`;
           this.modal.show();
+          this.bannerForm.reset();
+          this.selectedFile = null;
         },
         error => {
           this.modalMessage = `Ошибка при создании баннера: ${error.message}`;
           this.modal.show();
         }
       );
+    } else {
+      console.log('Форма невалидна');
     }
   }
-
-  isFormValid(): boolean {
-    return isFormValid(this.bannerForm, this.selectedFile);
-  }
-
 }

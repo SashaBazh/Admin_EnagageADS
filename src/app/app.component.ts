@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ThemeService } from './services/theme.service';
 import { Subscription } from 'rxjs';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',

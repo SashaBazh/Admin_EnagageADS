@@ -3,23 +3,8 @@
 
     <div class="container mt-5">
         <h2>Выплаты</h2>
-        <form [formGroup]="payoutForm" (ngSubmit)="downloadReport()">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="startDate" class="form-label">Дата начала</label>
-                    <input type="date" class="form-control" id="startDate" formControlName="startDate">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="endDate" class="form-label">Дата окончания</label>
-                    <input type="date" class="form-control" id="endDate" formControlName="endDate">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!payoutForm.valid">Скачать отчет по
-                выплатам</button>
-        </form>
-
         <div class="mt-4">
-            <button (click)="downloadCurrentPayouts()" class="btn btn-success">Скачать актуальные выплаты</button>
+            <button (click)="downloadCurrentPayouts()" class="btn btn-success">Скачать выплаты JSON</button>
         </div>
     </div>
 

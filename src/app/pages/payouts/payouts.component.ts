@@ -6,7 +6,7 @@ import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { PayoutsService } from '../../services/payouts.service';
-import { downloadReport, downloadCurrentPayouts } from '../../functions/payout.functions';
+import { downloadCurrentPayouts } from '../../functions/payout.functions';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
@@ -46,19 +46,6 @@ export class PayoutsComponent implements OnInit, OnDestroy {
     if (this.themeSubscription) {
       this.themeSubscription.unsubscribe();
     }
-  }
-
-  downloadReport() {
-    downloadReport(this.payoutForm, this.payoutService).subscribe(
-      (response) => {
-        this.modalMessage = 'Отчет успешно скачан';
-        this.modal.show();
-      },
-      (error) => {
-        this.modalMessage = `Ошибка при скачивании отчета: ${error.message}`;
-        this.modal.show();
-      }
-    );
   }
   
   downloadCurrentPayouts() {

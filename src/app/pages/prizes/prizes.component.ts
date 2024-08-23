@@ -6,7 +6,7 @@ import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
 import { ThemeService } from '../../services/theme.service';
 import { PrizeService } from '../../services/prizes.service';
-import { submitPrizeForm, uploadFile } from '../../functions/prize.functions';
+import { createPrizeFormData } from '../../functions/prize.functions';
 import { ModalComponent } from '../modal/modal.component';
 
 @Component({
@@ -52,25 +52,34 @@ export class PrizeComponent implements OnInit, OnDestroy {
   }
 
   onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = uploadFile(file);
-    }
+    this.selectedFile = event.target.files[0];
   }
 
   onSubmit() {
-    const submission = submitPrizeForm(this.prizeForm, this.selectedFile, this.prizeService);
-    if (submission) {
-      submission.subscribe(
-        response => {
-          this.modalMessage = `Приз успешно создано с ID: ${response.id}`;
-          this.modal.show();
-        },
-        error => {
-          this.modalMessage = `Ошибка при создании Приза: ${error.message}`;
-          this.modal.show();
-        }
-      );
-    }
+  if (this.prizeForm.valid && this.selectedFile) {
+    const formData = createPrizeFormData(this.prizeForm, this.selectedFile);
+    
+    console.log('FormData содержимое:');
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    console.log('Отправка запроса на создание приза');
+    this.prizeService.createPrize(formData).subscribe(
+      response => {
+        this.modalMessage = `${response.message}. ID приза: ${response.prize_id}`;
+        this.modal.show();
+        this.prizeForm.reset();
+        this.selectedFile = null;
+      },
+      error => {
+        this.modalMessage = `Ошибка при создании приза: ${error.message}`;
+        this.modal.show();
+      }
+    );
+  } else {
+    this.modalMessage = 'Пожалуйста, заполните все поля и выберите изображение';
+    this.modal.show();
   }
+}
 }

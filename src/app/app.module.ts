@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
-import { routes } from '../app/app.routes'; // Убедитесь, что путь к файлу правильный
+import { routes } from '../app/app.routes'; 
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { SettingsComponent } from './pages/settings/settings.component';
+import { CommonModule } from '@angular/common';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [
@@ -17,9 +21,17 @@ import { routes } from '../app/app.routes'; // Убедитесь, что пут
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    CommonModule,
+    NgxSliderModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true 
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

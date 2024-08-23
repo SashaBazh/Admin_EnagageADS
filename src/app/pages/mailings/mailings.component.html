@@ -3,24 +3,6 @@
     <div class="container mt-5">
         <h2>Рассылки</h2>
         <form [formGroup]="mailingForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-                <label class="form-label">Выбор ранга</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" formControlName="rankSelection" id="rangeRank" value="range">
-                    <label class="form-check-label" for="rangeRank">Диапазон рангов</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" formControlName="rankSelection" id="specificRank" value="specific">
-                    <label class="form-check-label" for="specificRank">Конкретные ранги</label>
-                </div>
-            </div>
-
-            <div *ngIf="mailingForm.get('rankSelection')?.value === 'range'" class="mb-3">
-                <label for="rankFrom" class="form-label">Ранг от</label>
-                <input type="number" class="form-control" id="rankFrom" formControlName="rankFrom">
-                <label for="rankTo" class="form-label">Ранг до</label>
-                <input type="number" class="form-control" id="rankTo" formControlName="rankTo">
-            </div>
 
             <div *ngIf="mailingForm.get('rankSelection')?.value === 'specific'" class="mb-3">
                 <label for="specificRanks" class="form-label">Конкретные ранги (через запятую)</label>
@@ -60,6 +42,8 @@
             <button type="submit" class="btn btn-primary" [disabled]="!mailingForm.valid">Подтвердить рассылку</button>
         </form>
     </div>
+
+      
 
     <app-modal [message]="modalMessage"></app-modal>
 </div>
