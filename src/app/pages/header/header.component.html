@@ -10,30 +10,30 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <ng-container *ngIf="isAdmin">
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/baner" routerLinkActive="active">Банер</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/task" routerLinkActive="active">Задания</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/prize" routerLinkActive="active">Призы</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/settings" routerLinkActive="active">Настройки</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/mailings" routerLinkActive="active">Рассылки</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/payouts" routerLinkActive="active">Выплаты</a>
-                        </li>
-                    </ng-container>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/task-verification" routerLinkActive="active">Верификация заданий</a>
-                    </li>
-                </ul>
+    <ng-container *ngIf="isAdmin">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/baner" routerLinkActive="active">Банер</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/task" routerLinkActive="active">Задания</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" routerLink="/prize" routerLinkActive="active">Призы</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" routerLink="/settings" routerLinkActive="active">Настройки</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/mailings" routerLinkActive="active">Рассылки</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" routerLink="/payouts" routerLinkActive="active">Выплаты</a>
+        </li>
+    </ng-container>
+    <li class="nav-item">
+        <a class="nav-link" routerLink="/task-verification" routerLinkActive="active">Верификация заданий</a>
+    </li>
+</ul>
                 <button class="btn btn-outline-secondary btn-sm" (click)="toggleTheme()">
                     <i class="bi bi-brightness-high-fill"></i>
                 </button>
