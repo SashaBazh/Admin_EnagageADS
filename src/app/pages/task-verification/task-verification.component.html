@@ -1,21 +1,19 @@
 <div class="app-container" [ngClass]="{'dark-theme': isDarkTheme}">
   <app-header></app-header>
-  <div class="container mt-5">
+  <div class="container-fluid mt-5">
     <h2>Верификация заданий</h2>
     <div *ngIf="tasks.length === 0; else tasksList">
       <p>Заданий для верификации нет.</p>
     </div>
     <ng-template #tasksList>
-      <div class="row">
-        <div class="col-md-6 mb-3" *ngFor="let task of tasks">
-          <div class="card">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <div class="col" *ngFor="let task of tasks">
+          <div class="card h-100">
             <div class="card-header text-center">
-              <h5>Тип задания: {{ (task.start_time && task.end_time && task.task_size) ? 'Ежедневное' : 'Обычное' }}
-              </h5>
+              <h5>Тип задания: {{ (task.start_time && task.end_time && task.task_size) ? 'Ежедневное' : 'Обычное' }}</h5>
             </div>
             <img *ngIf="task.proof_photo" [src]="getTaskImageUrl(task.proof_photo)"
-              style="display: block; margin: 10px auto 0; max-width: 100%; height: auto;" alt="Фото доказательства">
-
+              class="card-img-top" alt="Фото доказательства">
             <div class="card-body">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong>ID выполненного задания:</strong> {{ task.completed_task_id }}</li>
@@ -24,19 +22,16 @@
                 <li class="list-group-item"><strong>Описание:</strong> {{ task.description }}</li>
                 <li class="list-group-item"><strong>Награда:</strong> {{ task.reward }}</li>
                 <li class="list-group-item"><strong>Платформа:</strong> {{ task.platform }}</li>
-                <li class="list-group-item"><strong>Ссылка:</strong> <a [href]="task.link" target="_blank">{{ task.link
-                    }}</a></li>
+                <li class="list-group-item"><strong>Ссылка:</strong> <a [href]="task.link" target="_blank">{{ task.link }}</a></li>
                 <li class="list-group-item"><strong>Лимит:</strong> {{ task.limit }}</li>
-                <li class="list-group-item" *ngIf="task.start_time"><strong>Начало:</strong> {{ task.start_time |
-                  date:'medium' }}</li>
-                <li class="list-group-item" *ngIf="task.end_time"><strong>Окончание:</strong> {{ task.end_time |
-                  date:'medium' }}</li>
-                <li class="list-group-item" *ngIf="task.task_size"><strong>Размер задания:</strong> {{ task.task_size }}
-                </li>
-                <li class="list-group-item" *ngIf="task.social_link"><strong>Ссылка на соц. сеть:</strong> <a
-                    [href]="task.social_link" target="_blank">{{ task.social_link }}</a></li>
+                <li class="list-group-item" *ngIf="task.start_time"><strong>Начало:</strong> {{ task.start_time | date:'medium' }}</li>
+                <li class="list-group-item" *ngIf="task.end_time"><strong>Окончание:</strong> {{ task.end_time | date:'medium' }}</li>
+                <li class="list-group-item" *ngIf="task.task_size"><strong>Размер задания:</strong> {{ task.task_size }}</li>
+                <li class="list-group-item" *ngIf="task.social_link"><strong>Ссылка на соц. сеть:</strong> <a [href]="task.social_link" target="_blank">{{ task.social_link }}</a></li>
               </ul>
-              <div class="d-flex justify-content-between mt-3">
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-between">
                 <button class="btn btn-success" (click)="confirmTask(task.completed_task_id)">Подтвердить</button>
                 <button class="btn btn-danger" (click)="returnTask(task.completed_task_id)">Вернуть</button>
               </div>
