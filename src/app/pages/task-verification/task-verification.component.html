@@ -2,19 +2,60 @@
   <app-header></app-header>
   <div class="container-fluid mt-5">
     <h2>Верификация заданий</h2>
+    <div class="mb-4 d-flex align-items-center flex-wrap">
+      <button class="btn btn-primary me-3 mb-2" (click)="toggleSortOrder('id')">
+        <i class="bi" [ngClass]="{'bi-sort-numeric-down': sortField === 'id' && sortOrder === 'asc', 'bi-sort-numeric-up': sortField === 'id' && sortOrder === 'desc'}"></i>
+        {{ sortField === 'id' && sortOrder === 'asc' ? 'По возрастанию ID' : 'По убыванию ID' }}
+      </button>
+      <button class="btn btn-primary me-3 mb-2" (click)="toggleSortOrder('reward')">
+        <i class="bi" [ngClass]="{'bi-sort-numeric-down': sortField === 'reward' && sortOrder === 'asc', 'bi-sort-numeric-up': sortField === 'reward' && sortOrder === 'desc'}"></i>
+        {{ sortField === 'reward' && sortOrder === 'asc' ? 'По возрастанию награды' : 'По убыванию награды' }}
+      </button>
+      <button class="btn btn-primary me-3 mb-2" (click)="toggleSortOrder('limit')">
+        <i class="bi" [ngClass]="{'bi-sort-numeric-down': sortField === 'limit' && sortOrder === 'asc', 'bi-sort-numeric-up': sortField === 'limit' && sortOrder === 'desc'}"></i>
+        {{ sortField === 'limit' && sortOrder === 'asc' ? 'По возрастанию лимита' : 'По убыванию лимита' }}
+      </button>
+      <div class="input-group me-3 mb-2" style="max-width: 300px;">
+        <label class="input-group-text" for="platformSelect">Платформа</label>
+        <select class="form-select" id="platformSelect" [(ngModel)]="selectedPlatform" (change)="filterTasks()">
+          <option value="">Все платформы</option>
+          <option value="telegram">Telegram</option>
+          <option value="discord">Discord</option>
+          <option value="twitter">Twitter</option>
+          <option value="youtube">YouTube</option>
+          <option value="instagram">Instagram</option>
+          <option value="appstore">App Store</option>
+          <option value="playmarket">Play Market</option>
+          <option value="tiktok">TikTok</option>
+          <option value="facebook">Facebook</option>
+          <option value="vk">VK</option>
+          <option value="pinterest">Pinterest</option>
+          <option value="web">Web</option>
+        </select>
+      </div>
+      <div class="input-group mb-2">
+        <input type="text" class="form-control" placeholder="Поиск по названию" [(ngModel)]="searchText" (input)="filterTasks()">
+        <button class="btn btn-outline-secondary" type="button" (click)="filterTasks()">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+      <button class="btn btn-secondary mb-2" (click)="resetFilters()">
+        Сбросить фильтры
+      </button>
+    </div>
     <div *ngIf="tasks.length === 0; else tasksList">
       <p>Заданий для верификации нет.</p>
     </div>
     <ng-template #tasksList>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        <div class="col" *ngFor="let task of tasks">
+        <div class="col" *ngFor="let task of filteredTasks">
           <div class="card h-100">
             <div class="card-header text-center">
               <h5>Тип задания: {{ (task.start_time && task.end_time && task.task_size) ? 'Ежедневное' : 'Обычное' }}</h5>
             </div>
             <img *ngIf="task.proof_photo" [src]="getTaskImageUrl(task.proof_photo)"
      class="card-img-top proof-photo" alt="Фото доказательства"
-     style="display: block; margin: 0 auto; max-width: 100%; height: auto; max-height: 40vh; object-fit: contain;">
+     style="display: block; margin: 0 auto; max-width: 100%; height: 70%; max-height: 60vh; object-fit: contain;">
             <div class="card-body">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item"><strong>ID выполненного задания:</strong> {{ task.completed_task_id }}</li>
