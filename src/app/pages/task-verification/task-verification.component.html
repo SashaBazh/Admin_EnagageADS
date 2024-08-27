@@ -47,6 +47,23 @@
         Сбросить фильтры
       </button>
     </div>
+    <div class="input-group me-3 mb-2" style="max-width: 300px;">
+      <label class="input-group-text" for="userTgIdSelect">User ID</label>
+      <select class="form-select" id="userTgIdSelect" [(ngModel)]="selectedUserTgId" (change)="filterTasks()">
+        <option value="">Все пользователи</option>
+        <option *ngFor="let userId of getUserTgIds()" [value]="userId">{{ userId }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="selectedUserTgId && filteredTasks.length > 0" class="mb-3">
+      <button class="btn btn-success me-2" (click)="confirmAllTasksForUser(selectedUserTgId)">
+        Подтвердить все задания пользователя
+      </button>
+      <button class="btn btn-danger" (click)="banUserAndReturnAllTasks(selectedUserTgId)">
+        Забанить пользователя и вернуть все задания
+      </button>
+    </div>
+
     <div *ngIf="tasks.length === 0; else tasksList">
       <p>Заданий для верификации нет.</p>
     </div>
@@ -62,7 +79,7 @@
      style="display: block; margin: 0 auto; max-width: 100%; height: 70%; max-height: 60vh; object-fit: contain;">
             <div class="card-body">
               <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>User_TG_ID:</strong> {{ task.user_id }}</li>
+                <li class="list-group-item"><strong>User ID:</strong> {{ task.user_id }}</li>
                 <li class="list-group-item"><strong>ID выполненного задания:</strong> {{ task.completed_task_id }}</li>
                 <li class="list-group-item"><strong>ID задания:</strong> {{ task.task_id }}</li>
                 <li class="list-group-item"><strong>Название:</strong> {{ task.name }}</li>

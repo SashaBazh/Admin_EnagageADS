@@ -23,6 +23,7 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
   sortField: 'id' | 'reward' | 'limit' | 'completed_task_id' = 'id';
   searchText: string = '';
   selectedPlatform: string = '';
+  selectedUserTgId: string = '';
 
   constructor(
     private themeService: ThemeService,
@@ -53,6 +54,11 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
       },
       error => console.error('Ошибка при загрузке заданий:', error)
     );
+  }
+
+  getUserTgIds(): string[] {
+    const uniqueUserTgIds = new Set(this.tasks.map(task => task.user_id.toString()));
+    return Array.from(uniqueUserTgIds).sort((a, b) => a.localeCompare(b));
   }
 
   toggleSortOrder(field: 'id' | 'reward' | 'limit' | 'completed_task_id') {
@@ -104,8 +110,10 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
       const descriptionMatch = task.description.toLowerCase().includes(searchTextLower);
       const platformMatch = this.selectedPlatform === '' || 
                             task.platform.toLowerCase() === this.selectedPlatform.toLowerCase();
+      const userTgIdMatch = this.selectedUserTgId === '' || 
+                            task.user_id.toString() === this.selectedUserTgId;
       
-      return (nameMatch || descriptionMatch) && platformMatch;
+      return (nameMatch || descriptionMatch) && platformMatch && userTgIdMatch;
     });
     this.sortTasks();
   }
@@ -122,6 +130,7 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
   resetFilters() {
     this.searchText = '';
     this.selectedPlatform = '';
+    this.selectedUserTgId = '';
     this.sortField = 'id';
     this.sortOrder = 'asc';
     this.filterTasks();
@@ -195,5 +204,61 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
 
   getTaskImageUrl(photo: string | null): string | null {
     return photo ? this.taskService.getImageUrl(photo) : null;
+  }
+
+
+
+
+  confirmAllTasksForUser(userId: string) {
+    const userTasks = this.filteredTasks.filter(task => task.user_id.toString() === userId);
+    if (userTasks.length === 0) {
+      alert('У этого пользователя нет заданий для подтверждения.');
+      return;
+    }
+
+    if (confirm(`Вы уверены, что хотите подтвердить все задания (${userTasks.length}) для пользователя ${userId}?`)) {
+      const confirmPromises = userTasks.map(task => 
+        this.taskService.confirmTask(task.completed_task_id).toPromise()
+      );
+
+      Promise.all(confirmPromises)
+        .then(() => {
+          alert(`Все задания пользователя ${userId} успешно подтверждены.`);
+          this.loadTasks();
+        })
+        .catch(error => {
+          console.error('Ошибка при подтверждении заданий:', error);
+          alert('Произошла ошибка при подтверждении некоторых заданий.');
+        });
+    }
+  }
+
+  banUserAndReturnAllTasks(userId: string) {
+    const userTasks = this.filteredTasks.filter(task => task.user_id.toString() === userId);
+    if (userTasks.length === 0) {
+      alert('У этого пользователя нет заданий для возврата.');
+      return;
+    }
+
+    if (confirm(`Вы уверены, что хотите забанить пользователя ${userId} и вернуть все его задания (${userTasks.length})?`)) {
+      // Сначала возвращаем все задания
+      const returnPromises = userTasks.map(task => 
+        this.taskService.returnTask(task.completed_task_id).toPromise()
+      );
+
+      Promise.all(returnPromises)
+        .then(() => {
+          // После успешного возврата всех заданий, баним пользователя
+          return this.taskService.banUser(parseInt(userId)).toPromise();
+        })
+        .then(() => {
+          alert(`Пользователь ${userId} успешно забанен и все его задания возвращены.`);
+          this.loadTasks();
+        })
+        .catch(error => {
+          console.error('Ошибка при бане пользователя или возврате заданий:', error);
+          alert('Произошла ошибка при выполнении операции.');
+        });
+    }
   }
 }
