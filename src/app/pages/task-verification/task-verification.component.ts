@@ -20,7 +20,7 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
   tasks: Task[] = [];
   filteredTasks: Task[] = [];
   sortOrder: 'asc' | 'desc' = 'asc';
-  sortField: 'id' | 'reward' | 'limit' = 'id';
+  sortField: 'id' | 'reward' | 'limit' | 'completed_task_id' = 'id';
   searchText: string = '';
   selectedPlatform: string = '';
 
@@ -55,7 +55,7 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
     );
   }
 
-  toggleSortOrder(field: 'id' | 'reward' | 'limit') {
+  toggleSortOrder(field: 'id' | 'reward' | 'limit' | 'completed_task_id') {
     if (this.sortField === field) {
       this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
     } else {
@@ -69,7 +69,7 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
     this.filteredTasks.sort((a, b) => {
       let aValue: number;
       let bValue: number;
-
+  
       switch (this.sortField) {
         case 'id':
           aValue = a.task_id;
@@ -83,6 +83,10 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
           aValue = a.limit ?? Infinity;
           bValue = b.limit ?? Infinity;
           break;
+        case 'completed_task_id':
+          aValue = a.completed_task_id;
+          bValue = b.completed_task_id;
+          break;
       }
       
       if (this.sortOrder === 'asc') {
@@ -94,11 +98,25 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
   }
 
   filterTasks() {
-    this.filteredTasks = this.tasks.filter(task =>
-      task.name.toLowerCase().includes(this.searchText.toLowerCase()) &&
-      (this.selectedPlatform === '' || task.platform.toLowerCase() === this.selectedPlatform.toLowerCase())
-    );
+    const searchTextLower = this.searchText.toLowerCase();
+    this.filteredTasks = this.tasks.filter(task => {
+      const nameMatch = task.name.toLowerCase().includes(searchTextLower);
+      const descriptionMatch = task.description.toLowerCase().includes(searchTextLower);
+      const platformMatch = this.selectedPlatform === '' || 
+                            task.platform.toLowerCase() === this.selectedPlatform.toLowerCase();
+      
+      return (nameMatch || descriptionMatch) && platformMatch;
+    });
     this.sortTasks();
+  }
+
+  transliterateRussian(text: string): string {
+    const ru = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя';
+    const en = 'abvgdeejzijklmnoprstufhzcssyyyeua';
+    return text.split('').map(char => {
+      const index = ru.indexOf(char);
+      return index >= 0 ? en[index] : char;
+    }).join('');
   }
 
   resetFilters() {
@@ -137,6 +155,42 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  banUser(userId: number, completedTaskId: number) {
+    if (confirm('Вы уверены, что хотите забанить этого пользователя?')) {
+      // Сначала возвращаем задание
+      this.taskService.returnTask(completedTaskId).subscribe(
+        returnResponse => {
+          console.log(returnResponse.message);
+          
+          // После успешного возврата задания, баним пользователя
+          this.taskService.banUser(userId).subscribe(
+            banResponse => {
+              console.log(banResponse.message);
+              alert('Задание возвращено и пользователь успешно забанен');
+              this.loadTasks(); // Обновляем список заданий
+            },
+            banError => {
+              console.error('Ошибка при бане пользователя:', banError);
+              if (banError.error && banError.error.detail) {
+                alert(`Ошибка при бане: ${banError.error.detail}`);
+              } else {
+                alert('Произошла ошибка при бане пользователя');
+              }
+            }
+          );
+        },
+        returnError => {
+          console.error('Ошибка при возврате задания:', returnError);
+          if (returnError.error && returnError.error.detail) {
+            alert(`Ошибка при возврате задания: ${returnError.error.detail}`);
+          } else {
+            alert('Произошла ошибка при возврате задания');
+          }
+        }
+      );
+    }
   }
 
   getTaskImageUrl(photo: string | null): string | null {

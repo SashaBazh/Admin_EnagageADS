@@ -8,17 +8,18 @@ import { MailingsComponent } from './pages/mailings/mailings.component';
 import { PayoutsComponent } from './pages/payouts/payouts.component';
 import { TaskVerificationComponent } from './pages/task-verification/task-verification.component';
 import { NgModule } from '@angular/core';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
-    { path: 'baner', component: BanerComponent },
-    { path: 'task', component: TaskComponent },
-    { path: 'prize', component: PrizeComponent },
-    { path: 'settings', component: SettingsComponent },
-    { path: 'mailings', component: MailingsComponent },
-    { path: 'payouts', component: PayoutsComponent },
-    { path: 'task-verification', component: TaskVerificationComponent },
+    { path: 'baner', component: BanerComponent, canActivate: [AuthGuard] },
+    { path: 'task', component: TaskComponent, canActivate: [AuthGuard] },
+    { path: 'prize', component: PrizeComponent, canActivate: [AuthGuard] },
+    { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
+    { path: 'mailings', component: MailingsComponent, canActivate: [AuthGuard] },
+    { path: 'payouts', component: PayoutsComponent, canActivate: [AuthGuard] },
+    { path: 'task-verification', component: TaskVerificationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

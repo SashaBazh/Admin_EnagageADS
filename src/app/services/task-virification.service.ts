@@ -11,6 +11,7 @@ export interface Task {
   reward: number;
   proof_photo: string | null;
   platform: string;
+  user_id: number;
   link: string | null;
   limit: number | null;
   start_time: string | null;
@@ -42,6 +43,13 @@ export class TaskVirificationService {
     const url = `${this.apiUrl}/tasks/return`;
     const params = new HttpParams().set('completed_task_id', completedTaskId.toString());
     return this.http.post<{ message: string }>(url, null, { params });
+  }
+
+  banUser(userId: number): Observable<{ message: string }> {
+    const url = `${this.apiUrl}/ban-user`;
+    const formData = new FormData();
+    formData.append('user_id', userId.toString());
+    return this.http.post<{ message: string }>(url, formData);
   }
 
   getImageUrl(imagePath: string): string {

@@ -80,3 +80,63 @@
 .bi {
     font-size: 1.2em;
 }
+
+
+/* Общие стили для всех кнопок */
+.btn {
+    padding: 8px 12px; /* Сделать кнопки меньше */
+    font-size: 14px; /* Уменьшить шрифт */
+    border-radius: 6px; /* Скругленные углы поменьше */
+    transition: all 0.3s ease;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    width: 100%; /* Кнопки занимают всю ширину контейнера */
+    margin-bottom: 8px; /* Отступ снизу для кнопок */
+  }
+  
+  /* Стили для кнопки "Подтвердить" */
+  .btn-success {
+    background-color: #28a745;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
+  }
+  
+  /* Стили для кнопки "Вернуть" */
+  .btn-danger {
+    background-color: #dc3545;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  
+  /* Стили для кнопки "Забанить пользователя" */
+  .btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+  
+  .btn-warning:hover {
+    background-color: #e0a800;
+  }
+  
+  /* Адаптивность для контейнера кнопок */
+  .card-footer {
+    padding: 15px 10px; /* Уменьшение отступов внутри контейнера */
+  }
+  
+  .card-footer .d-flex {
+    flex-direction: column; /* Кнопки всегда располагаются в один столбец */
+  }
+  
+  .card-footer .d-flex .btn {
+    margin-bottom: 8px; /* Отступ между кнопками */
+  }
+  
+  .card-footer .d-flex .btn:last-child {
+    margin-bottom: 0; /* Убираем последний отступ снизу у последней кнопки */
+  }
+  
