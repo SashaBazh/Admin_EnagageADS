@@ -6,6 +6,7 @@ import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
 import { Task, TaskVirificationService } from '../../services/task-virification.service';
 import { ThemeService } from '../../services/theme.service';
+import { TgMiniAppTrackerService } from '../../services/tg-mini-app-tracker-service.service';
 
 @Component({
   selector: 'app-task-verification',
@@ -24,13 +25,16 @@ export class TaskVerificationComponent implements OnInit, OnDestroy {
   searchText: string = '';
   selectedPlatform: string = '';
   selectedUserTgId: string = '';
+  data: any;
 
   constructor(
     private themeService: ThemeService,
-    public taskService: TaskVirificationService
+    public taskService: TaskVirificationService,
+    private trackerService: TgMiniAppTrackerService
   ) {}
 
   ngOnInit() {
+    // this.trackerService.init();
     this.themeSubscription = this.themeService.getThemeObservable().subscribe(
       isDark => {
         this.isDarkTheme = isDark;

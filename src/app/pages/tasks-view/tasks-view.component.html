@@ -1,0 +1,67 @@
+<div class="app-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <app-header></app-header>
+    <div class="container mt-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">
+                    <i class="fas fa-tasks me-2"></i>Управление заданиями
+                </h2>
+            </div>
+            <div class="card-body">
+                <div *ngIf="tasks.length === 0" class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>Нет доступных заданий.
+                </div>
+
+                <div *ngIf="tasks.length > 0" class="row g-4">
+                    <div *ngFor="let task of tasks" class="col-md-4">
+                        <div class="card h-100 task-card shadow-sm position-relative">
+                            <span *ngIf="task.ended" class="badge bg-secondary badge-ended">Отключено</span>
+                            <img *ngIf="task.photo" [src]="getTaskImageUrl(task.photo)"
+                                class="card-img-top proof-photo" alt="Фото доказательства">
+                            <div class="card-body d-flex flex-column">
+                                <h4 class="card-title">{{ task.name }}</h4>
+                                <p class="card-text flex-grow-1">{{ task.description }}</p>
+                                <ul class="list-group list-group-flush mb-3">
+                                    <li class="list-group-item"><i class="fas fa-gift me-2"></i><strong>Вознаграждение:</strong> {{ task.reward }}</li>
+                                    <li class="list-group-item"><i class="fas fa-desktop me-2"></i><strong>Платформа:</strong> {{ task.platform }}</li>
+                                    <li class="list-group-item"><i class="fas fa-link me-2"></i><strong>Ссылка:</strong> <a [href]="task.link" target="_blank">{{ task.link }}</a></li>
+                                    <li class="list-group-item"><i class="fas fa-user-clock me-2"></i><strong>Ограничение:</strong> {{ task.limit }}</li>
+                                    <li *ngIf="task.start_time" class="list-group-item"><i class="fas fa-hourglass-start me-2"></i><strong>Начало:</strong> {{ task.start_time }}</li>
+                                    <li *ngIf="task.end_time" class="list-group-item"><i class="fas fa-hourglass-end me-2"></i><strong>Конец:</strong> {{ task.end_time }}</li>
+                                    <li *ngIf="task.task_size" class="list-group-item"><i class="fas fa-chart-bar me-2"></i><strong>Размер задачи:</strong> {{ task.task_size }}</li>
+                                </ul>
+                                <div *ngIf="task.daily_task" class="card mb-3">
+                                    <div class="card-header bg-info text-white">
+                                        Ежедневная задача
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><i class="fas fa-tasks me-2"></i><strong>Размер задачи:</strong> {{ task.daily_task.task_size }}</li>
+                                        <li class="list-group-item"><i class="fas fa-clock me-2"></i><strong>Время начала:</strong> {{ task.daily_task.start_time }}</li>
+                                        <li class="list-group-item"><i class="fas fa-clock me-2"></i><strong>Время окончания:</strong> {{ task.daily_task.end_time }}</li>
+                                    </ul>
+                                </div>
+                                <div class="card-footer p-0">
+                                    <div class="d-flex">
+                                        <ng-container *ngIf="!task.ended; else endedTask">
+                                            <button class="btn btn-warning btn-action" (click)="disableTask(task.id)">
+                                                <i class="fas fa-power-off me-1"></i>Отключить
+                                            </button>
+                                        </ng-container>
+                                        <ng-template #endedTask>
+                                            <span class="btn btn-secondary btn-action disabled">
+                                                <i class="fas fa-power-off me-1"></i>Отключено
+                                            </span>
+                                        </ng-template>
+                                        <button class="btn btn-danger btn-action" (click)="deleteTask(task.id)">
+                                            <i class="fas fa-trash-alt me-1"></i>Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
