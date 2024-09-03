@@ -1,1 +1,61 @@
-<p>service-assignments works!</p>
+<div class="app-container" [ngClass]="{'dark-theme': isDarkTheme}">
+    <app-header></app-header>
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Order List</h2>
+
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">User ID</th>
+                    <th scope="col">Service Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of orders">
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.user_id }}</td>
+                    <td>{{ order.service.service_name }}</td>
+                    <td>{{ order.service.price | currency }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.created_at }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" (click)="openModal(order.order_id)">
+                            Update Status
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Modal -->
+        <div class="modal fade" id="updateStatusModal" tabindex="-1" role="dialog" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateStatusModalLabel">Update Order №{{selectedOrderId}} Status</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="newStatus">New Status:</label>
+                                <select id="newStatus" class="form-control" [(ngModel)]="newStatus" name="newStatus">
+                                    <option *ngFor="let status of orderStatuses" [value]="status">
+                                        {{ status | titlecase }}
+                                    </option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" (click)="updateStatus()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

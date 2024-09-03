@@ -36,7 +36,7 @@ export class TaskViewService {
   // Получение всех заданий
   getAllTasks(): Observable<Task[]> {
     const url = `${this.apiUrl}/system-tasks`; // исправлено на правильный эндпоинт
-    return this.http.post<Task[]>(url, {}); // Используем POST запрос с пустым телом
+    return this.http.get<Task[]>(url); // Используем POST запрос с пустым телом
   }
 
   getImageUrl(imagePath: string): string {
